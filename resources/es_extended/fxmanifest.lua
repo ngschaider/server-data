@@ -17,6 +17,7 @@ shared_scripts {
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
 
+	"server/callbacks.lua",
 	'server/common.lua',
 	'server/classes/player.lua',
 	'server/functions.lua',
@@ -24,13 +25,17 @@ server_scripts {
 	'server/main.lua',
 	'server/commands.lua',
 
-	'common/modules/math.lua',
-	'common/modules/table.lua',
-	'common/functions.lua'
+	'shared/modules/math.lua',
+	'shared/modules/table.lua',
+	'shared/functions.lua'
 }
 
 client_scripts {
+	"@NativeUI/NativeUI.lua",
+
+	"client/callbacks.lua",
 	'client/common.lua',
+	"client/character_selection.lua",
 	'client/functions.lua',
 	'client/wrapper.lua',
 	'client/main.lua',
@@ -39,9 +44,9 @@ client_scripts {
 	'client/modules/scaleform.lua',
 	'client/modules/streaming.lua',
 
-	'common/modules/math.lua',
-	'common/modules/table.lua',
-	'common/functions.lua'
+	'shared/modules/math.lua',
+	'shared/modules/table.lua',
+	'shared/functions.lua'
 }
 
 ui_page {
@@ -69,5 +74,4 @@ files {
 
 dependencies {
 	'oxmysql',
-	'spawnmanager',
 }

@@ -27,6 +27,20 @@ function ESX.Table.IndexOf(t, value)
 	return -1
 end
 
+ESX.Table.Contains = function(t, value)
+	return ESX.Table.IndexOf(t, value) ~= -1;
+end
+
+ESX.Table.ContainsKey = function(t, value)
+	for k,v in pairs(t) do
+		if k == value then
+			return true;
+		end
+	end
+	
+	return false;
+end
+
 function ESX.Table.LastIndexOf(t, value)
 	for i=#t, 1, -1 do
 		if t[i] == value then

@@ -1,40 +1,34 @@
+local Payout = function()
+	local characters = ESX.GetCharacters();
+	for _, character in pairs(characters) do
+		local job = character.getJob().name;
+		local salary = character.getJob().salary;
+
+		if salary > 0 then
+			local accounts = ESX.Accounts.getAccount("society", job, "money");
+
+			if #accounts > 0 then
+				local account = accounts[1];
+				
+				if account.getValue() >= salary then
+					character.getAccount("bank").addValue(salary);
+					TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_help', salary), 'CHAR_BANK_MAZE', 9)
+					account.removeValue(salary);
+				else
+					TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), '', _U('company_nomoney'), 'CHAR_BANK_MAZE', 1)
+				end
+			else
+				print("Society " .. job .. " does not have an account. Not paying out paycheck");
+			end
+		end
+	end
+end
+
 function StartPayCheck()
 	CreateThread(function()
 		while true do
 			Wait(Config.PaycheckInterval)
-			local xPlayers = ESX.GetExtendedPlayers()
-			for _, xPlayer in pairs(xPlayers) do
-				local job     = xPlayer.job.grade_name
-				local salary  = xPlayer.job.grade_salary
-
-				if salary > 0 then
-					if job == 'unemployed' then -- unemployed
-						xPlayer.addAccountMoney('bank', salary)
-						TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_help', salary), 'CHAR_BANK_MAZE', 9)
-					elseif Config.EnableSocietyPayouts then -- possibly a society
-						TriggerEvent('esx_society:getSociety', xPlayer.job.name, function (society)
-							if society ~= nil then -- verified society
-								TriggerEvent('esx_addonaccount:getSharedAccount', society.account, function (account)
-									if account.money >= salary then -- does the society money to pay its employees?
-										xPlayer.addAccountMoney('bank', salary)
-										account.removeMoney(salary)
-
-										TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_salary', salary), 'CHAR_BANK_MAZE', 9)
-									else
-										TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), '', _U('company_nomoney'), 'CHAR_BANK_MAZE', 1)
-									end
-								end)
-							else -- not a society
-								xPlayer.addAccountMoney('bank', salary)
-								TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_salary', salary), 'CHAR_BANK_MAZE', 9)
-							end
-						end)
-					else -- generic job
-						xPlayer.addAccountMoney('bank', salary)
-						TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_salary', salary), 'CHAR_BANK_MAZE', 9)
-					end
-				end
-			end
+			Payout();
 		end
 	end)
 end

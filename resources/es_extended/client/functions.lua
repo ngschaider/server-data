@@ -1,10 +1,8 @@
 ESX                           = {}
-Core                          = {}
-ESX.PlayerData                = {}
-ESX.PlayerLoaded              = false
-Core.CurrentRequestId          = 0
-Core.ServerCallbacks          = {}
-Core.TimeoutCallbacks          = {}
+Core = {}
+Core.CurrentRequestId = 0
+Core.ServerCallbacks = {}
+Core.TimeoutCallbacks = {}
 
 ESX.UI                        = {}
 ESX.UI.HUD                    = {}
@@ -21,6 +19,30 @@ ESX.Scaleform.Utils           = {}
 
 ESX.Streaming                 = {}
 
+ESX.Player = {};
+
+ESX.GetCharacters = function(cb)
+	ESX.TriggerServerCallback("ngx:GetCharacters", cb);
+end
+
+ESX.Character = {};
+
+ESX.Character.getJob = function(cb)
+	ESX.TriggerServerCallback("ngx:GetCharacterData", cb, "job");
+end;
+
+ESX.Character.getName = function(cb)
+	ESX.TriggerServerCallback("ngx:GetCharacterData", cb, "name");
+end;
+
+ESX.Character.getAccount = function(accountName, cb)
+	ESX.TriggerServerCallback("ngx:GetCharacterData", cb, "account", accountName);
+end;
+
+ESX.Character.getAccounts = function(cb)
+	ESX.TriggerServerCallback("ngx:GetCharacterData", cb, "accounts");
+end;
+
 function ESX.SetTimeout(msec, cb)
 	table.insert(Core.TimeoutCallbacks, {
 		time = GetGameTimer() + msec,
@@ -31,14 +53,6 @@ end
 
 function ESX.ClearTimeout(i)
 	Core.TimeoutCallbacks[i] = nil
-end
-
-function ESX.IsPlayerLoaded()
-	return ESX.PlayerLoaded
-end
-
-function ESX.GetPlayerData()
-	return ESX.PlayerData
 end
 
 function ESX.SearchInventory(items, count)
@@ -110,18 +124,6 @@ function ESX.ShowFloatingHelpNotification(msg, coords)
 	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
 	BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
 	EndTextCommandDisplayHelp(2, false, false, -1)
-end
-
-function ESX.TriggerServerCallback(name, cb, ...)
-	Core.ServerCallbacks[Core.CurrentRequestId] = cb
-
-	TriggerServerEvent('esx:triggerServerCallback', name, Core.CurrentRequestId, ...)
-
-	if Core.CurrentRequestId < 65535 then
-		Core.CurrentRequestId = Core.CurrentRequestId + 1
-	else
-		Core.CurrentRequestId = 0
-	end
 end
 
 function ESX.UI.HUD.SetDisplay(opacity)
@@ -1035,14 +1037,7 @@ function ESX.ShowInventory()
 	end)
 end
 
-RegisterNetEvent('esx:serverCallback')
-AddEventHandler('esx:serverCallback', function(requestId, ...)
-	Core.ServerCallbacks[requestId](...)
-	Core.ServerCallbacks[requestId] = nil
-end)
-
-RegisterNetEvent('esx:showNotification')
-AddEventHandler('esx:showNotification', function(msg)
+RegisterNetEvent('esx:showNotification', function(msg)
 	ESX.ShowNotification(msg)
 end)
 

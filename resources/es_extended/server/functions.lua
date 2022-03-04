@@ -1,10 +1,10 @@
-function ESX.Trace(msg)
+ESX.Trace = function(msg)
 	if Config.EnableDebug then
 		print(('[^2TRACE^7] %s^7'):format(msg))
 	end
 end
 
-function ESX.SetTimeout(msec, cb)
+ESX.SetTimeout = function(msec, cb)
 	local id = Core.TimeoutCount + 1
 
 	SetTimeout(msec, function()
@@ -151,20 +151,8 @@ function ESX.ClearTimeout(id)
 	Core.CancelledTimeouts[id] = true
 end
 
-function ESX.RegisterServerCallback(name, cb)
-	Core.ServerCallbacks[name] = cb
-end
-
-function ESX.TriggerServerCallback(name, requestId, source, cb, ...)
-	if Core.ServerCallbacks[name] then
-		Core.ServerCallbacks[name](source, cb, ...)
-	else
-		print(('[^3WARNING^7] Server callback ^5"%s"^0 does not exist. ^1Please Check The Server File for Errors!'):format(name))
-	end
-end
-
 function Core.SavePlayer(xPlayer, cb)
-	MySQL.prepare('UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?', {
+	--[[MySQL.prepare('UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?', {
 		json.encode(xPlayer.getAccounts(true)),
 		xPlayer.job.name,
 		xPlayer.job.grade,
@@ -178,11 +166,11 @@ function Core.SavePlayer(xPlayer, cb)
 			print(('[^2INFO^7] Saved player ^5"%s^7"'):format(xPlayer.name))
 		end
 		if cb then cb() end
-	end)
+	end)]]
 end
 
 function Core.SavePlayers(cb)
-	local xPlayers = ESX.GetExtendedPlayers()
+	--[[local xPlayers = ESX.GetExtendedPlayers()
 	local count = #xPlayers
 	if count > 0 then
 		local parameters = {}
@@ -206,31 +194,11 @@ function Core.SavePlayers(cb)
 				if type(cb) == 'function' then cb() else print(('[^2INFO^7] Saved %s %s over %s ms'):format(count, count > 1 and 'players' or 'player', (os.time() - time) / 1000000)) end
 			end
 		end)
-	end
+	end]]
 end
 
-function ESX.GetPlayers()
-	local sources = {}
-
-	for k,v in pairs(ESX.Players) do
-		sources[#sources + 1] = k
-	end
-
-	return sources
-end
-
-function ESX.GetExtendedPlayers(key, val)
-	local xPlayers = {}
-	for k, v in pairs(ESX.Players) do
-		if key then
-			if (key == 'job' and v.job.name == val) or v[key] == val then
-				xPlayers[#xPlayers + 1] = v
-			end
-		else
-			xPlayers[#xPlayers + 1] = v
-		end
-	end
-	return xPlayers
+ESX.GetPlayers = function()
+	return ESX.Players;
 end
 
 function ESX.GetPlayerFromId(source)
@@ -245,8 +213,8 @@ function ESX.GetPlayerFromIdentifier(identifier)
 	end
 end
 
-function ESX.GetIdentifier(playerId)
-	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
+ESX.GetIdentifier = function(src)
+	for k,v in pairs(GetPlayerIdentifiers(src)) do
 		if string.match(v, 'license:') then
 			local identifier = string.gsub(v, 'license:', '')
 			return identifier
@@ -267,9 +235,9 @@ function ESX.GetItemLabel(item)
 		return ESX.Items[item].label
 	end
 
-	if Config.OxInventory then
-		item = exports.ox_inventory:Items(item)
-		if item then return item.label end
+	item = exports.ox_inventory:Items(item);
+	if item then 
+		return item.label 
 	end
 end
 
@@ -283,28 +251,6 @@ function ESX.GetUsableItems()
 		Usables[k] = true
 	end
 	return Usables
-end
-
-if not Config.OxInventory then
-	function ESX.CreatePickup(type, name, count, label, playerId, components, tintIndex)
-		local pickupId = (Core.PickupId == 65635 and 0 or Core.PickupId + 1)
-		local xPlayer = ESX.GetPlayerFromId(playerId)
-		local coords = xPlayer.getCoords()
-
-		Core.Pickups[pickupId] = {
-			type = type, name = name,
-			count = count, label = label,
-			coords = coords
-		}
-
-		if type == 'item_weapon' then
-			Core.Pickups[pickupId].components = components
-			Core.Pickups[pickupId].tintIndex = tintIndex
-		end
-
-		TriggerClientEvent('esx:createPickup', -1, pickupId, label, coords, type, name, components, tintIndex)
-		Core.PickupId = pickupId
-	end
 end
 
 function ESX.DoesJobExist(job, grade)
