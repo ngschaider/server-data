@@ -142,7 +142,7 @@ end
 NGX.GetPlayerFromIdentifier = function(identifier)
 	for k,v in pairs(NGX.Players) do
 		if v.identifier == identifier then
-			return v
+			return v;
 		end
 	end
 end
@@ -150,24 +150,44 @@ end
 NGX.GetIdentifier = function(src)
 	for k,v in pairs(GetPlayerIdentifiers(src)) do
 		if string.match(v, 'license:') then
-			local identifier = string.gsub(v, 'license:', '')
-			return identifier
+			return string.gsub(v, 'license:', '');
 		end
 	end
+
+	return nil;
 end
 
 NGX.GetJobs = function()
-	return NGX.Jobs
+	local result = MySQL.prepare.await("SELECT j.id job_id, j.name job_name, j.label job_label, g.id grade_id, g.name grade_name, g.label grade_label, g.salary salary, FROM jobs j INNER JOIN job_grades g ON g.job_name = j.name");
+	local res = {};
+	for k,v in pairs(result) do
+		if not res[v.job_name] then
+			res[v.job_name] = {
+				id = v.job_id,
+				name = v.job_name,
+				label = v.job_label,
+				grades = {},
+			}
+		end
+
+		res[v.job_name].grades[v.grade_name] = {
+			id = v.grade_id,
+			name = v.grade_name,
+			label = v.grade_label,
+			salary = v.salary
+		};
+	end
+
+	return res;
 end
 
 NGX.DoesJobExist = function(job, grade)
 	grade = tostring(grade)
 
 	if job and grade then
-		if NGX.Jobs[job] and NGX.Jobs[job].grades[grade] then
-			return true
-		end
+		local res = MySQL.prepare.await("SELECT 1 FROM jobs j INNER JOIN job_grades g ON g.job_id = j.id WHERE j.name = ? AND g.name = ?", {job, grade});
+		return res and #result > 0;
 	end
 
-	return false
+	return false;
 end
