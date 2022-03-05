@@ -1,5 +1,3 @@
-local pickups = {}
-
 Citizen.CreateThread(function()
 	while true do
 		InvalidateIdleCam()
