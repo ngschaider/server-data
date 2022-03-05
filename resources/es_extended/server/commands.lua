@@ -19,7 +19,7 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 }})
 
 NGX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
-	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
+	xPlayer.triggerEvent('ngx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car', help = _U('command_car_car'), type = 'string'}
 }})
@@ -28,7 +28,7 @@ NGX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError
 	if not args.radius then 
 		args.radius = 4 
 	end
-	xPlayer.triggerEvent('esx:deleteVehicle', args.radius)
+	xPlayer.triggerEvent('ngx:deleteVehicle', args.radius)
 end, false, {help = _U('command_cardel'), validate = false, arguments = {
 	{name = 'radius', help = _U('command_cardel_radius'), type = 'any'}
 }})
@@ -66,5 +66,5 @@ NGX.RegisterCommand({'clearall'}, 'admin', function(xPlayer, args, showError)
 end, false, {help = _U('command_clearall')})
 
 NGX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
-	xPlayer.triggerEvent("esx:tpm")
+	xPlayer.triggerEvent("ngx:tpm")
 end, true)

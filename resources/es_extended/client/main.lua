@@ -21,15 +21,15 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew, skin)
+RegisterNetEvent('ngx:playerLoaded', function(xPlayer, isNew, skin)
 	FreezeEntityPosition(PlayerPedId(), true)
 		
-	TriggerServerEvent('esx:onPlayerSpawn')
-	TriggerEvent('esx:onPlayerSpawn')
+	TriggerServerEvent('ngx:onPlayerSpawn')
+	TriggerEvent('ngx:onPlayerSpawn')
 	
 	TriggerEvent('skinchanger:loadSkin', skin)
 
-	TriggerEvent('esx:loadingScreenOff')
+	TriggerEvent('ngx:loadingScreenOff')
 	ShutdownLoadingScreen()
 	ShutdownLoadingScreenNui()
 	FreezeEntityPosition(NGX.PlayerData.ped, false)
@@ -38,13 +38,13 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew, skin)
 	NetworkSetFriendlyFireOption(true);
 end)
 
-RegisterNetEvent('esx:onPlayerLogout')
-AddEventHandler('esx:onPlayerLogout', function()
+RegisterNetEvent('ngx:onPlayerLogout')
+AddEventHandler('ngx:onPlayerLogout', function()
 	NGX.PlayerLoaded = false
 end)
 
-RegisterNetEvent('esx:setMaxWeight')
-AddEventHandler('esx:setMaxWeight', function(newMaxWeight) 
+RegisterNetEvent('ngx:setMaxWeight')
+AddEventHandler('ngx:setMaxWeight', function(newMaxWeight) 
 	NGX.PlayerData.maxWeight = newMaxWeight 
 end)
 
@@ -56,9 +56,9 @@ local function onPlayerSpawn()
 end
 
 AddEventHandler('playerSpawned', onPlayerSpawn)
-AddEventHandler('esx:onPlayerSpawn', onPlayerSpawn)
+AddEventHandler('ngx:onPlayerSpawn', onPlayerSpawn)
 
-AddEventHandler('esx:onPlayerDeath', function()
+AddEventHandler('ngx:onPlayerDeath', function()
 	NGX.SetPlayerData('ped', PlayerPedId())
 	NGX.SetPlayerData('dead', true)
 end)
@@ -67,15 +67,15 @@ AddEventHandler('skinchanger:modelLoaded', function()
 	while not NGX.PlayerLoaded do
 		Wait(100)
 	end
-	TriggerEvent('esx:restoreLoadout')
+	TriggerEvent('ngx:restoreLoadout')
 end)
 
-AddEventHandler('esx:restoreLoadout', function()
+AddEventHandler('ngx:restoreLoadout', function()
 	NGX.SetPlayerData('ped', PlayerPedId());
 end)
 
-RegisterNetEvent('esx:setAccountMoney')
-AddEventHandler('esx:setAccountMoney', function(account)
+RegisterNetEvent('ngx:setAccountMoney')
+AddEventHandler('ngx:setAccountMoney', function(account)
 	for k,v in ipairs(NGX.PlayerData.accounts) do
 		if v.name == account.name then
 			NGX.PlayerData.accounts[k] = account
@@ -86,19 +86,19 @@ AddEventHandler('esx:setAccountMoney', function(account)
 	NGX.SetPlayerData('accounts', NGX.PlayerData.accounts)
 end)
 
-RegisterNetEvent('esx:teleport')
-AddEventHandler('esx:teleport', function(coords)
+RegisterNetEvent('ngx:teleport')
+AddEventHandler('ngx:teleport', function(coords)
 	NGX.Game.Teleport(NGX.PlayerData.ped, coords)
 end)
 
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(Job)
+RegisterNetEvent('ngx:setJob')
+AddEventHandler('ngx:setJob', function(Job)
 	NGX.SetPlayerData('job', Job)
 end)
 
-RegisterNetEvent('esx:spawnVehicle')
-AddEventHandler('esx:spawnVehicle', function(vehicle)
-	NGX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+RegisterNetEvent('ngx:spawnVehicle')
+AddEventHandler('ngx:spawnVehicle', function(vehicle)
+	NGX.TriggerServerCallback("ngx:isUserAdmin", function(admin)
 		if admin then
 			local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 
@@ -115,8 +115,8 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 	end)
 end)
 
-RegisterNetEvent('esx:registerSuggestions')
-AddEventHandler('esx:registerSuggestions', function(registeredCommands)
+RegisterNetEvent('ngx:registerSuggestions')
+AddEventHandler('ngx:registerSuggestions', function(registeredCommands)
 	for name,command in pairs(registeredCommands) do
 		if command.suggestion then
 			TriggerEvent('chat:addSuggestion', ('/%s'):format(name), command.suggestion.help, command.suggestion.arguments)
@@ -124,8 +124,8 @@ AddEventHandler('esx:registerSuggestions', function(registeredCommands)
 	end
 end)
 
-RegisterNetEvent('esx:deleteVehicle')
-AddEventHandler('esx:deleteVehicle', function(radius)
+RegisterNetEvent('ngx:deleteVehicle')
+AddEventHandler('ngx:deleteVehicle', function(radius)
 	if radius and tonumber(radius) then
 		radius = tonumber(radius) + 0.01
 		local vehicles = NGX.Game.GetVehiclesInArea(GetEntityCoords(NGX.PlayerData.ped), radius)
@@ -166,15 +166,15 @@ end)
 ClearPlayerWantedLevel(PlayerId())
 SetMaxWantedLevel(0)
 
------ Admin commnads from esx_adminplus
+----- Admin commnads from ngx_adminplus
 
-RegisterNetEvent("esx:tpm")
-AddEventHandler("esx:tpm", function()
+RegisterNetEvent("ngx:tpm")
+AddEventHandler("ngx:tpm", function()
 local PlayerPedId = PlayerPedId
 local GetEntityCoords = GetEntityCoords
 local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
 
-	NGX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+	NGX.TriggerServerCallback("ngx:isUserAdmin", function(admin)
 		if admin then
 			local blipMarker = GetFirstBlipInfoId(8)
 			if not DoesBlipExist(blipMarker) then
@@ -260,9 +260,9 @@ local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
 end)
 
 local noclip = false
-RegisterNetEvent("esx:noclip")
-AddEventHandler("esx:noclip", function(input)
-	NGX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+RegisterNetEvent("ngx:noclip")
+AddEventHandler("ngx:noclip", function(input)
+	NGX.TriggerServerCallback("ngx:isUserAdmin", function(admin)
 		if admin then
     local player = PlayerId()
 
@@ -329,13 +329,13 @@ end)
 	end
 end)
 
-RegisterNetEvent("esx:killPlayer")
-AddEventHandler("esx:killPlayer", function()
+RegisterNetEvent("ngx:killPlayer")
+AddEventHandler("ngx:killPlayer", function()
   SetEntityHealth(NGX.PlayerData.ped, 0)
 end)
 
-RegisterNetEvent("esx:freezePlayer")
-AddEventHandler("esx:freezePlayer", function(input)
+RegisterNetEvent("ngx:freezePlayer")
+AddEventHandler("ngx:freezePlayer", function(input)
     local player = PlayerId()
     if input == 'freeze' then
         SetEntityCollision(NGX.PlayerData.ped, false)

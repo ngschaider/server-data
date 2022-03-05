@@ -11,7 +11,7 @@ Core.RegisteredCommands = {}
 Core.Pickups = {}
 Core.PickupId = 0
 
-AddEventHandler('esx:getSharedObject', function(cb)
+AddEventHandler('ngx:getSharedObject', function(cb)
 	cb(NGX);
 end);
 
@@ -26,7 +26,7 @@ MySQL.ready(function()
 	StartPayCheck()
 end)
 
-RegisterServerEvent('esx:clientLog', function(msg)
+RegisterServerEvent('ngx:clientLog', function(msg)
 	print(("[^2TRACE^7] %s^7"):format(msg))
 end)
 

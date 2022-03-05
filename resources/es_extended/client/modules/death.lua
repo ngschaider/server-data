@@ -39,19 +39,19 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, deathCause)
 	local distance = #(victimCoords - killerCoords)
 
 	local data = {
-		victimCoords = {x = ESX.Math.Round(victimCoords.x, 1), y = ESX.Math.Round(victimCoords.y, 1), z = ESX.Math.Round(victimCoords.z, 1)},
-		killerCoords = {x = ESX.Math.Round(killerCoords.x, 1), y = ESX.Math.Round(killerCoords.y, 1), z = ESX.Math.Round(killerCoords.z, 1)},
+		victimCoords = {x = NGX.Math.Round(victimCoords.x, 1), y = NGX.Math.Round(victimCoords.y, 1), z = NGX.Math.Round(victimCoords.z, 1)},
+		killerCoords = {x = NGX.Math.Round(killerCoords.x, 1), y = NGX.Math.Round(killerCoords.y, 1), z = NGX.Math.Round(killerCoords.z, 1)},
 
 		killedByPlayer = true,
 		deathCause = deathCause,
-		distance = ESX.Math.Round(distance, 1),
+		distance = NGX.Math.Round(distance, 1),
 
 		killerServerId = killerServerId,
 		killerClientId = killerClientId
 	}
 
-	TriggerEvent('esx:onPlayerDeath', data)
-	TriggerServerEvent('esx:onPlayerDeath', data)
+	TriggerEvent('ngx:onPlayerDeath', data)
+	TriggerServerEvent('ngx:onPlayerDeath', data)
 end
 
 function PlayerKilled(deathCause)
@@ -59,12 +59,12 @@ function PlayerKilled(deathCause)
 	local victimCoords = GetEntityCoords(playerPed)
 
 	local data = {
-		victimCoords = {x = ESX.Math.Round(victimCoords.x, 1), y = ESX.Math.Round(victimCoords.y, 1), z = ESX.Math.Round(victimCoords.z, 1)},
+		victimCoords = {x = NGX.Math.Round(victimCoords.x, 1), y = NGX.Math.Round(victimCoords.y, 1), z = NGX.Math.Round(victimCoords.z, 1)},
 
 		killedByPlayer = false,
 		deathCause = deathCause
 	}
 
-	TriggerEvent('esx:onPlayerDeath', data)
-	TriggerServerEvent('esx:onPlayerDeath', data)
+	TriggerEvent('ngx:onPlayerDeath', data)
+	TriggerServerEvent('ngx:onPlayerDeath', data)
 end

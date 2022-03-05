@@ -87,7 +87,7 @@ function NGX.SetPlayerData(key, val)
 	NGX.PlayerData[key] = val
 	if key ~= 'inventory' and key ~= 'loadout' then
 		if type(val) == 'table' or val ~= current then
-			TriggerEvent('esx:setPlayerData', key, val, current)
+			TriggerEvent('ngx:setPlayerData', key, val, current)
 		end
 	end
 end
@@ -100,30 +100,30 @@ end
 
 function NGX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	if saveToBrief == nil then saveToBrief = true end
-	AddTextEntry('esxAdvancedNotification', msg)
-	BeginTextCommandThefeedPost('esxAdvancedNotification')
+	AddTextEntry('ngxAdvancedNotification', msg)
+	BeginTextCommandThefeedPost('ngxAdvancedNotification')
 	if hudColorIndex then ThefeedSetNextPostBackgroundColor(hudColorIndex) end
 	EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
 	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
 end
 
 function NGX.ShowHelpNotification(msg, thisFrame, beep, duration)
-	AddTextEntry('esxHelpNotification', msg)
+	AddTextEntry('ngxHelpNotification', msg)
 
 	if thisFrame then
-		DisplayHelpTextThisFrame('esxHelpNotification', false)
+		DisplayHelpTextThisFrame('ngxHelpNotification', false)
 	else
 		if beep == nil then beep = true end
-		BeginTextCommandDisplayHelp('esxHelpNotification')
+		BeginTextCommandDisplayHelp('ngxHelpNotification')
 		EndTextCommandDisplayHelp(0, false, beep, duration or -1)
 	end
 end
 
 function NGX.ShowFloatingHelpNotification(msg, coords)
-	AddTextEntry('esxFloatingHelpNotification', msg)
+	AddTextEntry('ngxFloatingHelpNotification', msg)
 	SetFloatingHelpTextWorldPosition(1, coords)
 	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
-	BeginTextCommandDisplayHelp('esxFloatingHelpNotification')
+	BeginTextCommandDisplayHelp('ngxFloatingHelpNotification')
 	EndTextCommandDisplayHelp(2, false, false, -1)
 end
 
@@ -900,7 +900,7 @@ function NGX.ShowInventory()
 						players[GetPlayerServerId(playerNearby)] = true
 					end
 
-					NGX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
+					NGX.TriggerServerCallback('ngx:getPlayerNames', function(returnedPlayers)
 						for playerId,playerName in pairs(returnedPlayers) do
 							table.insert(elements, {
 								label = playerName,
@@ -922,7 +922,7 @@ function NGX.ShowInventory()
 
 								if IsPedOnFoot(selectedPlayerPed) and not IsPedFalling(selectedPlayerPed) then
 									if type == 'item_weapon' then
-										TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, nil)
+										TriggerServerEvent('ngx:giveInventoryItem', selectedPlayerId, type, item, nil)
 										menu2.close()
 										menu1.close()
 									else
@@ -937,7 +937,7 @@ function NGX.ShowInventory()
 												menu2.close()
 												menu1.close()
 											else
-												ESX.ShowNotification(_U('amount_invalid'))
+												NGX.ShowNotification(_U('amount_invalid'))
 											end
 										end, function(data3, menu3)
 											menu3.close()
@@ -966,7 +966,7 @@ function NGX.ShowInventory()
 						menu1.close()
 						TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
 						Wait(1000)
-						TriggerServerEvent('esx:removeInventoryItem', type, item)
+						TriggerServerEvent('ngx:removeInventoryItem', type, item)
 					else
 						NGX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
 							title = _U('amount')
@@ -978,7 +978,7 @@ function NGX.ShowInventory()
 								menu1.close()
 								TaskPlayAnim(playerPed, dict, anim, 8.0, 1.0, 1000, 16, 0.0, false, false, false)
 								Wait(1000)
-								TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
+								TriggerServerEvent('ngx:removeInventoryItem', type, item, quantity)
 							else
 								NGX.ShowNotification(_U('amount_invalid'))
 							end
@@ -988,7 +988,7 @@ function NGX.ShowInventory()
 					end
 				end
 			elseif data1.current.action == 'use' then
-				TriggerServerEvent('esx:useItem', item)
+				TriggerServerEvent('ngx:useItem', item)
 			elseif data1.current.action == 'return' then
 				NGX.UI.Menu.CloseAll()
 				NGX.ShowInventory()
@@ -1007,7 +1007,7 @@ function NGX.ShowInventory()
 
 								if quantity and quantity > 0 then
 									if pedAmmo >= quantity then
-										TriggerServerEvent('esx:giveInventoryItem', GetPlayerServerId(closestPlayer), 'item_ammo', item, quantity)
+										TriggerServerEvent('ngx:giveInventoryItem', GetPlayerServerId(closestPlayer), 'item_ammo', item, quantity)
 										menu2.close()
 										menu1.close()
 									else
@@ -1038,17 +1038,17 @@ function NGX.ShowInventory()
 	end)
 end
 
-RegisterNetEvent('esx:showNotification', function(msg)
+RegisterNetEvent('ngx:showNotification', function(msg)
 	NGX.ShowNotification(msg)
 end)
 
-RegisterNetEvent('esx:showAdvancedNotification')
-AddEventHandler('esx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+RegisterNetEvent('ngx:showAdvancedNotification')
+AddEventHandler('ngx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	NGX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 end)
 
-RegisterNetEvent('esx:showHelpNotification')
-AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
+RegisterNetEvent('ngx:showHelpNotification')
+AddEventHandler('ngx:showHelpNotification', function(msg, thisFrame, beep, duration)
 	NGX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 

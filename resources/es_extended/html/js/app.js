@@ -1,14 +1,14 @@
 (() => {
 
-	ESX = {};
-	ESX.HUDElements = [];
+	NGX = {};
+	NGX.HUDElements = [];
 
-	ESX.setHUDDisplay = function (opacity) {
+	NGX.setHUDDisplay = function (opacity) {
 		$('#hud').css('opacity', opacity);
 	};
 
-	ESX.insertHUDElement = function (name, index, priority, html, data) {
-		ESX.HUDElements.push({
+	NGX.insertHUDElement = function (name, index, priority, html, data) {
+		NGX.HUDElements.push({
 			name: name,
 			index: index,
 			priority: priority,
@@ -16,46 +16,46 @@
 			data: data
 		});
 
-		ESX.HUDElements.sort((a, b) => {
+		NGX.HUDElements.sort((a, b) => {
 			return a.index - b.index || b.priority - a.priority;
 		});
 	};
 
-	ESX.updateHUDElement = function (name, data) {
-		for (let i = 0; i < ESX.HUDElements.length; i++) {
-			if (ESX.HUDElements[i].name == name) {
-				ESX.HUDElements[i].data = data;
+	NGX.updateHUDElement = function (name, data) {
+		for (let i = 0; i < NGX.HUDElements.length; i++) {
+			if (NGX.HUDElements[i].name == name) {
+				NGX.HUDElements[i].data = data;
 			}
 		}
 
-		ESX.refreshHUD();
+		NGX.refreshHUD();
 	};
 
-	ESX.deleteHUDElement = function (name) {
-		for (let i = 0; i < ESX.HUDElements.length; i++) {
-			if (ESX.HUDElements[i].name == name) {
-				ESX.HUDElements.splice(i, 1);
+	NGX.deleteHUDElement = function (name) {
+		for (let i = 0; i < NGX.HUDElements.length; i++) {
+			if (NGX.HUDElements[i].name == name) {
+				NGX.HUDElements.splice(i, 1);
 			}
 		}
 
-		ESX.refreshHUD();
+		NGX.refreshHUD();
 	};
 
-	ESX.resetHUDElements = function () {
-		ESX.HUDElements = [];
-		ESX.refreshHUD();
+	NGX.resetHUDElements = function () {
+		NGX.HUDElements = [];
+		NGX.refreshHUD();
 	};
 
-	ESX.refreshHUD = function () {
+	NGX.refreshHUD = function () {
 		$('#hud').html('');
 
-		for (let i = 0; i < ESX.HUDElements.length; i++) {
-			let html = Mustache.render(ESX.HUDElements[i].html, ESX.HUDElements[i].data);
+		for (let i = 0; i < NGX.HUDElements.length; i++) {
+			let html = Mustache.render(NGX.HUDElements[i].html, NGX.HUDElements[i].data);
 			$('#hud').append(html);
 		}
 	};
 
-	ESX.inventoryNotification = function (add, label, count) {
+	NGX.inventoryNotification = function (add, label, count) {
 		let notif = '';
 
 		if (add) {
@@ -81,32 +81,32 @@
 	window.onData = (data) => {
 		switch (data.action) {
 			case 'setHUDDisplay': {
-				ESX.setHUDDisplay(data.opacity);
+				NGX.setHUDDisplay(data.opacity);
 				break;
 			}
 
 			case 'insertHUDElement': {
-				ESX.insertHUDElement(data.name, data.index, data.priority, data.html, data.data);
+				NGX.insertHUDElement(data.name, data.index, data.priority, data.html, data.data);
 				break;
 			}
 
 			case 'updateHUDElement': {
-				ESX.updateHUDElement(data.name, data.data);
+				NGX.updateHUDElement(data.name, data.data);
 				break;
 			}
 
 			case 'deleteHUDElement': {
-				ESX.deleteHUDElement(data.name);
+				NGX.deleteHUDElement(data.name);
 				break;
 			}
 
 			case 'resetHUDElements': {
-				ESX.resetHUDElements();
+				NGX.resetHUDElements();
 				break;
 			}
 
 			case 'inventoryNotification': {
-				ESX.inventoryNotification(data.add, data.item, data.count);
+				NGX.inventoryNotification(data.add, data.item, data.count);
 			}
 		}
 	};

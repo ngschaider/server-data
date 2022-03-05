@@ -5,7 +5,7 @@ function ConstructCharacter(clientId, characterId)
 	self.player = NGX.GetPlayerFromId(clientId);
 
 	self.setPosition = function(coords)
-		self.triggerEvent('esx:teleport', coords);
+		self.triggerEvent('ngx:teleport', coords);
 	end
 
 	self.getPosition = function(vector)

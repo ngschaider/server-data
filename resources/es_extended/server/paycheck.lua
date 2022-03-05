@@ -12,10 +12,10 @@ local Payout = function()
 				
 				if account.getValue() >= salary then
 					character.getAccount("bank").addValue(salary);
-					TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_help', salary), 'CHAR_BANK_MAZE', 9)
+					TriggerClientEvent('ngx:showAdvancedNotification', xPlayer.source, _U('bank'), _U('received_paycheck'), _U('received_help', salary), 'CHAR_BANK_MAZE', 9)
 					account.removeValue(salary);
 				else
-					TriggerClientEvent('esx:showAdvancedNotification', xPlayer.source, _U('bank'), '', _U('company_nomoney'), 'CHAR_BANK_MAZE', 1)
+					TriggerClientEvent('ngx:showAdvancedNotification', xPlayer.source, _U('bank'), '', _U('company_nomoney'), 'CHAR_BANK_MAZE', 1)
 				end
 			else
 				print("Society " .. job .. " does not have an account. Not paying out paycheck");

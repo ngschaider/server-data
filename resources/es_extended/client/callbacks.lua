@@ -33,10 +33,10 @@ NGX.RegisterClientCallback = function(name, cb)
     clientCallbacks[name] = cb;
 end
 
-RegisterNetEvent("esx:ClientCallbackRequest", function(name, requestId, ...)
+RegisterNetEvent("ngx:ClientCallbackRequest", function(name, requestId, ...)
 	if clientCallbacks[name] then
 		clientCallbacks[name](playerId, function(...)
-			TriggerServerEvent("esx:ClientCallbackResponse", requestId, ...);
+			TriggerServerEvent("ngx:ClientCallbackResponse", requestId, ...);
 		end, ...);
 	else
 		print("Client callback " .. name .. " not found.");

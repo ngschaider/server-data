@@ -6,12 +6,12 @@ NGX.RegisterServerCallback = function(name, cb)
 	serverCallbacks[name] = cb;
 end
 
-RegisterNetEvent('esx:ServerCallbackRequest', function(name, requestId, ...)
+RegisterNetEvent('ngx:ServerCallbackRequest', function(name, requestId, ...)
 	local playerId = source;
 
 	if serverCallbacks[name] then
 		serverCallbacks[name](playerId, function(...)
-			TriggerClientEvent('esx:ServerCallbackResponse', playerId, requestId, ...);
+			TriggerClientEvent('ngx:ServerCallbackResponse', playerId, requestId, ...);
 		end, ...);
 	else
 		print("Server callback " .. name .. " not found.");
@@ -36,10 +36,10 @@ NGX.TriggerClientCallback = function(name, clientId, cb, ...)
     local requestId = GetAndConsumeRequestId();
 	clientCallbacks[requestId] = cb;
 
-	TriggerClientEvent("esx:ClientCallbackRequest", clientId, name, requestId, ...)
+	TriggerClientEvent("ngx:ClientCallbackRequest", clientId, name, requestId, ...)
 end;
 
-RegisterNetEvent("esx:ClientCallbackResponse", function(requestId, ...)
+RegisterNetEvent("ngx:ClientCallbackResponse", function(requestId, ...)
 	clientCallbacks[requestId](...);
 	clientCallbacks[requestId] = nil;
 end)
