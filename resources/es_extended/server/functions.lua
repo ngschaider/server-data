@@ -151,52 +151,6 @@ function NGX.ClearTimeout(id)
 	Core.CancelledTimeouts[id] = true
 end
 
-function Core.SavePlayer(xPlayer, cb)
-	--[[MySQL.prepare('UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?', {
-		json.encode(xPlayer.getAccounts(true)),
-		xPlayer.job.name,
-		xPlayer.job.grade,
-		xPlayer.group,
-		json.encode(xPlayer.getCoords()),
-		json.encode(xPlayer.getInventory(true)),
-		json.encode(xPlayer.getLoadout(true)),
-		xPlayer.identifier
-	}, function(affectedRows)
-		if affectedRows == 1 then
-			print(('[^2INFO^7] Saved player ^5"%s^7"'):format(xPlayer.name))
-		end
-		if cb then cb() end
-	end)]]
-end
-
-function Core.SavePlayers(cb)
-	--[[local xPlayers = NGX.GetExtendedPlayers()
-	local count = #xPlayers
-	if count > 0 then
-		local parameters = {}
-		local time = os.time()
-		for i=1, count do
-			local xPlayer = xPlayers[i]
-			parameters[#parameters+1] = {
-				json.encode(xPlayer.getAccounts(true)),
-				xPlayer.job.name,
-				xPlayer.job.grade,
-				xPlayer.group,
-				json.encode(xPlayer.getCoords()),
-				json.encode(xPlayer.getInventory(true)),
-				json.encode(xPlayer.getLoadout(true)),
-				xPlayer.identifier
-			}
-		end
-		MySQL.prepare("UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?", parameters,
-		function(results)
-			if results then
-				if type(cb) == 'function' then cb() else print(('[^2INFO^7] Saved %s %s over %s ms'):format(count, count > 1 and 'players' or 'player', (os.time() - time) / 1000000)) end
-			end
-		end)
-	end]]
-end
-
 NGX.GetPlayers = function()
 	return NGX.Players;
 end
@@ -222,35 +176,8 @@ NGX.GetIdentifier = function(src)
 	end
 end
 
-function NGX.RegisterUsableItem(item, cb)
-	Core.UsableItemsCallbacks[item] = cb
-end
-
-function NGX.UseItem(source, item, data)
-	Core.UsableItemsCallbacks[item](source, item, data)
-end
-
-function NGX.GetItemLabel(item)
-	if NGX.Items[item] then
-		return NGX.Items[item].label
-	end
-
-	item = exports.ox_inventory:Items(item);
-	if item then 
-		return item.label 
-	end
-end
-
 function NGX.GetJobs()
 	return NGX.Jobs
-end
-
-function NGX.GetUsableItems()
-	local Usables = {}
-	for k in pairs(Core.UsableItemsCallbacks) do
-		Usables[k] = true
-	end
-	return Usables
 end
 
 function NGX.DoesJobExist(job, grade)

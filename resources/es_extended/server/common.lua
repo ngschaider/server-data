@@ -1,9 +1,7 @@
 NGX = {}
 NGX.Players = {}
 NGX.Jobs = {}
-NGX.Items = {}
 Core = {}
-Core.UsableItemsCallbacks = {}
 Core.ServerCallbacks = {}
 Core.TimeoutCount = -1
 Core.CancelledTimeouts = {}

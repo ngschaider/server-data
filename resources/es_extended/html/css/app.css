@@ -25,17 +25,6 @@ html {
 	right: 40;
 }
 
-#inventory_notifications {
-	font-family: bankgothic;
-	position: absolute;
-	right: 40;
-	bottom: 40;
-	font-size: 2em;
-	font-weight: bold;
-	color: #FFF;
-	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
-
 .menu {
 	font-family: 'Open Sans', sans-serif;
 	min-width: 400px;
