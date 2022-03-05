@@ -1,4 +1,4 @@
-function ConstructCharacter(clientId, characterId)
+ConstructCharacter = function(clientId, characterId)
 	local self = {};
 
 	self.id = characterId;

@@ -24,7 +24,7 @@ local Payout = function()
 	end
 end
 
-function StartPayCheck()
+StartPayCheck = function()
 	CreateThread(function()
 		while true do
 			Wait(Config.PaycheckInterval)

@@ -4,7 +4,7 @@ for i = 48,  57 do table.insert(Charset, string.char(i)) end
 for i = 65,  90 do table.insert(Charset, string.char(i)) end
 for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
-function NGX.GetRandomString(length)
+NGX.GetRandomString = function(length)
 	math.randomseed(GetGameTimer())
 
 	if length > 0 then
@@ -14,11 +14,11 @@ function NGX.GetRandomString(length)
 	end
 end
 
-function NGX.GetConfig()
+NGX.GetConfig = function()
 	return Config;
 end
 
-function NGX.GetWeapon(weaponName)
+NGX.GetWeapon = function(weaponName)
 	weaponName = string.upper(weaponName)
 
 	for k,v in ipairs(Config.Weapons) do
@@ -28,7 +28,7 @@ function NGX.GetWeapon(weaponName)
 	end
 end
 
-function NGX.GetWeaponFromHash(weaponHash)
+NGX.GetWeaponFromHash = function(weaponHash)
 	for k,v in ipairs(Config.Weapons) do
 		if GetHashKey(v.name) == weaponHash then
 			return v
@@ -36,11 +36,11 @@ function NGX.GetWeaponFromHash(weaponHash)
 	end
 end
 
-function NGX.GetWeaponList()
+NGX.GetWeaponList = function()
 	return Config.Weapons
 end
 
-function NGX.GetWeaponLabel(weaponName)
+NGX.GetWeaponLabel = function(weaponName)
 	weaponName = string.upper(weaponName)
 
 	for k,v in ipairs(Config.Weapons) do
@@ -50,7 +50,7 @@ function NGX.GetWeaponLabel(weaponName)
 	end
 end
 
-function NGX.GetWeaponComponent(weaponName, weaponComponent)
+NGX.GetWeaponComponent = function(weaponName, weaponComponent)
 	weaponName = string.upper(weaponName)
 	local weapons = Config.Weapons
 
@@ -65,7 +65,7 @@ function NGX.GetWeaponComponent(weaponName, weaponComponent)
 	end
 end
 
-function NGX.DumpTable(table, nb)
+NGX.DumpTable = function(table, nb)
 	if nb == nil then
 		nb = 0
 	end
@@ -95,6 +95,6 @@ function NGX.DumpTable(table, nb)
 	end
 end
 
-function NGX.Round(value, numDecimalPlaces)
+NGX.Round = function(value, numDecimalPlaces)
 	return NGX.Math.Round(value, numDecimalPlaces)
 end

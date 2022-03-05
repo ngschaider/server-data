@@ -20,7 +20,7 @@ NGX.SetTimeout = function(msec, cb)
 	return id
 end
 
-function NGX.RegisterCommand(name, group, cb, allowConsole, suggestion)
+NGX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 	if type(name) == 'table' then
 		for k,v in ipairs(name) do
 			NGX.RegisterCommand(v, group, cb, allowConsole, suggestion)
@@ -147,7 +147,7 @@ function NGX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	end
 end
 
-function NGX.ClearTimeout(id)
+NGX.ClearTimeout = function(id)
 	Core.CancelledTimeouts[id] = true
 end
 
@@ -155,11 +155,11 @@ NGX.GetPlayers = function()
 	return NGX.Players;
 end
 
-function NGX.GetPlayerFromId(source)
+NGX.GetPlayerFromId = function(source)
 	return NGX.Players[tonumber(source)]
 end
 
-function NGX.GetPlayerFromIdentifier(identifier)
+NGX.GetPlayerFromIdentifier = function(identifier)
 	for k,v in pairs(NGX.Players) do
 		if v.identifier == identifier then
 			return v
@@ -176,31 +176,15 @@ NGX.GetIdentifier = function(src)
 	end
 end
 
-function NGX.GetJobs()
+NGX.GetJobs = function()
 	return NGX.Jobs
 end
 
-function NGX.DoesJobExist(job, grade)
+NGX.DoesJobExist = function(job, grade)
 	grade = tostring(grade)
 
 	if job and grade then
 		if NGX.Jobs[job] and NGX.Jobs[job].grades[grade] then
-			return true
-		end
-	end
-
-	return false
-end
-
-function Core.IsPlayerAdmin(playerId)
-	if (IsPlayerAceAllowed(playerId, 'command') or GetConvar('sv_lan', '') == 'true') and true or false then
-		return true
-	end
-
-	local xPlayer = NGX.GetPlayerFromId(playerId)
-
-	if xPlayer then
-		if xPlayer.group == 'admin' then
 			return true
 		end
 	end

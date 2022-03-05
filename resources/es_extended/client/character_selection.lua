@@ -66,10 +66,6 @@ RegisterNetEvent("ngx:OnPlayerJoined", function()
 	end);
 end);
 
-function ApplyCharacter()
-
-end
-
 AddEventHandler('onResourceStop', function(resourceName)
   if (GetCurrentResourceName() ~= resourceName) then
     return

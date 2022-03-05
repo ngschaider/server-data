@@ -1,7 +1,8 @@
-NGX.Table = {}
+NGX = NGX or {};
+NGX.Table = {};
 
 -- nil proof alternative to #table
-function NGX.Table.SizeOf(t)
+NGX.Table.SizeOf = function(t)
 	local count = 0
 
 	for _,_ in pairs(t) do
@@ -11,13 +12,13 @@ function NGX.Table.SizeOf(t)
 	return count
 end
 
-function NGX.Table.Set(t)
+NGX.Table.Set = function(t)
 	local set = {}
 	for k,v in ipairs(t) do set[v] = true end
 	return set
 end
 
-function NGX.Table.IndexOf(t, value)
+NGX.Table.IndexOf = function(t, value)
 	for i=1, #t, 1 do
 		if t[i] == value then
 			return i
@@ -41,7 +42,7 @@ NGX.Table.ContainsKey = function(t, value)
 	return false;
 end
 
-function NGX.Table.LastIndexOf(t, value)
+NGX.Table.LastIndexOf = function(t, value)
 	for i=#t, 1, -1 do
 		if t[i] == value then
 			return i
@@ -51,7 +52,7 @@ function NGX.Table.LastIndexOf(t, value)
 	return -1
 end
 
-function NGX.Table.Find(t, cb)
+NGX.Table.Find = function(t, cb)
 	for i=1, #t, 1 do
 		if cb(t[i]) then
 			return t[i]
@@ -61,7 +62,7 @@ function NGX.Table.Find(t, cb)
 	return nil
 end
 
-function NGX.Table.FindIndex(t, cb)
+NGX.Table.FindIndex = function(t, cb)
 	for i=1, #t, 1 do
 		if cb(t[i]) then
 			return i
@@ -71,7 +72,7 @@ function NGX.Table.FindIndex(t, cb)
 	return -1
 end
 
-function NGX.Table.Filter(t, cb)
+NGX.Table.Filter = function(t, cb)
 	local newTable = {}
 
 	for i=1, #t, 1 do
@@ -83,7 +84,7 @@ function NGX.Table.Filter(t, cb)
 	return newTable
 end
 
-function NGX.Table.Map(t, cb)
+NGX.Table.Map = function(t, cb)
 	local newTable = {}
 
 	for i=1, #t, 1 do
@@ -93,7 +94,7 @@ function NGX.Table.Map(t, cb)
 	return newTable
 end
 
-function NGX.Table.Reverse(t)
+NGX.Table.Reverse = function(t)
 	local newTable = {}
 
 	for i=#t, 1, -1 do
@@ -103,7 +104,7 @@ function NGX.Table.Reverse(t)
 	return newTable
 end
 
-function NGX.Table.Clone(t)
+NGX.Table.Clone = function(t)
 	if type(t) ~= 'table' then return t end
 
 	local meta = getmetatable(t)
@@ -122,7 +123,7 @@ function NGX.Table.Clone(t)
 	return target
 end
 
-function NGX.Table.Concat(t1, t2)
+NGX.Table.Concat = function(t1, t2)
 	local t3 = NGX.Table.Clone(t1)
 
 	for i=1, #t2, 1 do
@@ -132,7 +133,7 @@ function NGX.Table.Concat(t1, t2)
 	return t3
 end
 
-function NGX.Table.Join(t, sep)
+NGX.Table.Join = function(t, sep)
 	local sep = sep or ','
 	local str = ''
 
@@ -149,7 +150,7 @@ end
 
 -- Credit: https://stackoverflow.com/a/15706820
 -- Description: sort function for pairs
-function NGX.Table.Sort(t, order)
+NGX.Table.Sort = function(t, order)
 	-- collect the keys
 	local keys = {}
 

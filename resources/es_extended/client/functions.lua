@@ -1,43 +1,35 @@
 NGX = NGX or {};
+NGX.Game = NGX.Game or {};
 
 Core = {}
 Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
 Core.TimeoutCallbacks = {}
 
-NGX.Game                      = {}
-NGX.Game.Utils                = {}
-
-NGX.Scaleform                 = {}
-NGX.Scaleform.Utils           = {}
-
-NGX.Streaming                 = {}
-
 NGX.Player = {};
-
-NGX.GetCharacters = function(cb)
-	NGX.TriggerServerCallback("ngx:GetCharacters", cb);
-end
-
 NGX.Character = {};
 
-NGX.Character.getJob = function(cb)
+NGX.Player.GetCharacters = function(cb)
+	NGX.TriggerServerCallback("ngx:GetCharacters", cb);
+end;
+
+NGX.Character.GetJob = function(cb)
 	NGX.TriggerServerCallback("ngx:GetCharacterData", cb, "job");
 end;
 
-NGX.Character.getName = function(cb)
+NGX.Character.GetName = function(cb)
 	NGX.TriggerServerCallback("ngx:GetCharacterData", cb, "name");
 end;
 
-NGX.Character.getAccount = function(accountName, cb)
+NGX.Character.GetAccount = function(accountName, cb)
 	NGX.TriggerServerCallback("ngx:GetCharacterData", cb, "account", accountName);
 end;
 
-NGX.Character.getAccounts = function(cb)
+NGX.Character.GetAccounts = function(cb)
 	NGX.TriggerServerCallback("ngx:GetCharacterData", cb, "accounts");
 end;
 
-function NGX.SetTimeout(msec, cb)
+NGX.SetTimeout = function(msec, cb)
 	table.insert(Core.TimeoutCallbacks, {
 		time = GetGameTimer() + msec,
 		cb   = cb
@@ -45,17 +37,17 @@ function NGX.SetTimeout(msec, cb)
 	return #Core.TimeoutCallbacks
 end
 
-function NGX.ClearTimeout(i)
+NGX.ClearTimeout = function(i)
 	Core.TimeoutCallbacks[i] = nil
 end
 
-function NGX.ShowNotification(msg)
+NGX.ShowNotification = function(msg)
 	BeginTextCommandThefeedPost('STRING')
 	AddTextComponentSubstringPlayerName(msg)
 	EndTextCommandThefeedPostTicker(0,1)
 end
 
-function NGX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+NGX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	if saveToBrief == nil then saveToBrief = true end
 	AddTextEntry('ngxAdvancedNotification', msg)
 	BeginTextCommandThefeedPost('ngxAdvancedNotification')
@@ -64,7 +56,7 @@ function NGX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconTyp
 	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
 end
 
-function NGX.ShowHelpNotification(msg, thisFrame, beep, duration)
+NGX.ShowHelpNotification = function(msg, thisFrame, beep, duration)
 	AddTextEntry('ngxHelpNotification', msg)
 
 	if thisFrame then
@@ -76,7 +68,7 @@ function NGX.ShowHelpNotification(msg, thisFrame, beep, duration)
 	end
 end
 
-function NGX.ShowFloatingHelpNotification(msg, coords)
+NGX.ShowFloatingHelpNotification = function(msg, coords)
 	AddTextEntry('ngxFloatingHelpNotification', msg)
 	SetFloatingHelpTextWorldPosition(1, coords)
 	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
@@ -84,7 +76,7 @@ function NGX.ShowFloatingHelpNotification(msg, coords)
 	EndTextCommandDisplayHelp(2, false, false, -1)
 end
 
-function NGX.Game.GetPedMugshot(ped, transparent)
+NGX.Game.GetPedMugshot = function(ped, transparent)
 	if DoesEntityExist(ped) then
 		local mugshot
 
@@ -104,7 +96,7 @@ function NGX.Game.GetPedMugshot(ped, transparent)
 	end
 end
 
-function NGX.Game.Teleport(entity, coords, cb)
+NGX.Game.Teleport = function(entity, coords, cb)
 	local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
 
 	if DoesEntityExist(entity) then
@@ -122,7 +114,7 @@ function NGX.Game.Teleport(entity, coords, cb)
 	end
 end
 
-function NGX.Game.SpawnObject(object, coords, cb, networked)
+NGX.Game.SpawnObject = function(object, coords, cb, networked)
 	local model = type(object) == 'number' and object or GetHashKey(object)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
@@ -137,21 +129,21 @@ function NGX.Game.SpawnObject(object, coords, cb, networked)
 	end)
 end
 
-function NGX.Game.SpawnLocalObject(object, coords, cb)
+NGX.Game.SpawnLocalObject = function(object, coords, cb)
 	NGX.Game.SpawnObject(object, coords, cb, false)
 end
 
-function NGX.Game.DeleteVehicle(vehicle)
+NGX.Game.DeleteVehicle = function(vehicle)
 	SetEntityAsMissionEntity(vehicle, false, true)
 	DeleteVehicle(vehicle)
 end
 
-function NGX.Game.DeleteObject(object)
+NGX.Game.DeleteObject = function(object)
 	SetEntityAsMissionEntity(object, false, true)
 	DeleteObject(object)
 end
 
-function NGX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
+NGX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
@@ -181,22 +173,22 @@ function NGX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
 	end)
 end
 
-function NGX.Game.SpawnLocalVehicle(vehicle, coords, heading, cb)
+NGX.Game.SpawnLocalVehicle = function(vehicle, coords, heading, cb)
 	NGX.Game.SpawnVehicle(vehicle, coords, heading, cb, false)
 end
 
-function NGX.Game.IsVehicleEmpty(vehicle)
+NGX.Game.IsVehicleEmpty = function(vehicle)
 	local passengers = GetVehicleNumberOfPassengers(vehicle)
 	local driverSeatFree = IsVehicleSeatFree(vehicle, -1)
 
 	return passengers == 0 and driverSeatFree
 end
 
-function NGX.Game.GetObjects() -- Leave the function for compatibility
+NGX.Game.GetObjects = function() -- Leave the function for compatibility
 	return GetGamePool('CObject')
 end
 
-function NGX.Game.GetPeds(onlyOtherPeds)
+NGX.Game.GetPeds = function(onlyOtherPeds)
 	local peds = {};
 	local myPed = NGX.Character.getPed(),
 	local pool = GetGamePool("CPed");
@@ -210,11 +202,11 @@ function NGX.Game.GetPeds(onlyOtherPeds)
 	return peds
 end
 
-function NGX.Game.GetVehicles() -- Leave the function for compatibility
+NGX.Game.GetVehicles = function() -- Leave the function for compatibility
 	return GetGamePool('CVehicle')
 end
 
-function NGX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
+NGX.Game.GetPlayers = function(onlyOtherPlayers, returnKeyValue, returnPeds)
 	local players, myPlayer = {}, PlayerId()
 
 	for k,player in ipairs(GetActivePlayers()) do
@@ -232,19 +224,19 @@ function NGX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
 	return players
 end
 
-function NGX.Game.GetClosestObject(coords, modelFilter)
+NGX.Game.GetClosestObject = function(coords, modelFilter)
 	return NGX.Game.GetClosestEntity(NGX.Game.GetObjects(), false, coords, modelFilter)
 end
 
-function NGX.Game.GetClosestPed(coords, modelFilter)
+NGX.Game.GetClosestPed = function(coords, modelFilter)
 	return NGX.Game.GetClosestEntity(NGX.Game.GetPeds(true), false, coords, modelFilter)
 end
 
-function NGX.Game.GetClosestPlayer(coords)
+NGX.Game.GetClosestPlayer = function(coords)
 	return NGX.Game.GetClosestEntity(NGX.Game.GetPlayers(true, true), true, coords, nil)
 end
 
-function NGX.Game.GetClosestVehicle(coords, modelFilter)
+NGX.Game.GetClosestVehicle = function(coords, modelFilter)
 	return NGX.Game.GetClosestEntity(NGX.Game.GetVehicles(), false, coords, modelFilter)
 end
 
@@ -269,20 +261,19 @@ local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coord
 	return nearbyEntities
 end
 
-function NGX.Game.GetPlayersInArea(coords, maxDistance)
+NGX.Game.GetPlayersInArea = function(coords, maxDistance)
 	return EnumerateEntitiesWithinDistance(NGX.Game.GetPlayers(true, true), true, coords, maxDistance)
 end
 
-function NGX.Game.GetVehiclesInArea(coords, maxDistance)
+NGX.Game.GetVehiclesInArea = function(coords, maxDistance)
 	return EnumerateEntitiesWithinDistance(NGX.Game.GetVehicles(), false, coords, maxDistance)
 end
 
-function NGX.Game.IsSpawnPointClear(coords, maxDistance)
+NGX.Game.IsSpawnPointClear = function(coords, maxDistance)
 	return #NGX.Game.GetVehiclesInArea(coords, maxDistance) == 0
 end
 
-
-function NGX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilter)
+NGX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFilter)
 	local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil
 
 	if coords then
@@ -313,7 +304,7 @@ function NGX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilt
 	return closestEntity, closestEntityDistance
 end
 
-function NGX.Game.GetVehicleInDirection()
+NGX.Game.GetVehicleInDirection = function()
 	local playerPed    = NGX.Character.getPed();
 	local playerCoords = GetEntityCoords(playerPed)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
@@ -328,7 +319,7 @@ function NGX.Game.GetVehicleInDirection()
 	return nil
 end
 
-function NGX.Game.GetVehicleProperties(vehicle)
+NGX.Game.GetVehicleProperties = function(vehicle)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
@@ -429,7 +420,7 @@ function NGX.Game.GetVehicleProperties(vehicle)
 	end
 end
 
-function NGX.Game.SetVehicleProperties(vehicle, props)
+NGX.Game.SetVehicleProperties = function(vehicle, props)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
@@ -521,7 +512,7 @@ function NGX.Game.SetVehicleProperties(vehicle, props)
 	end
 end
 
-function NGX.Game.Utils.DrawText3D(coords, text, size, font)
+NGX.Game.DrawText3D = function(coords, text, size, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 
 	local camCoords = GetFinalRenderedCamCoord()
@@ -547,31 +538,31 @@ function NGX.Game.Utils.DrawText3D(coords, text, size, font)
 end
 
 RegisterNetEvent('ngx:showNotification', function(msg)
-	NGX.ShowNotification(msg)
-end)
+	NGX.ShowNotification(msg);
+end);
 
 RegisterNetEvent('ngx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-	NGX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-end)
+	NGX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex);
+end);
 
 RegisterNetEvent('ngx:showHelpNotification', function(msg, thisFrame, beep, duration)
-	NGX.ShowHelpNotification(msg, thisFrame, beep, duration)
-end)
+	NGX.ShowHelpNotification(msg, thisFrame, beep, duration);
+end);
 
 -- SetTimeout
 CreateThread(function()
 	while true do
-		local sleep = 100
+		local sleep = 100;
 		if #Core.TimeoutCallbacks > 0 then
-			local currTime = GetGameTimer()
-			sleep = 0
+			local currTime = GetGameTimer();
+			sleep = 0;
 			for i=1, #Core.TimeoutCallbacks, 1 do
 				if currTime >= Core.TimeoutCallbacks[i].time then
-					Core.TimeoutCallbacks[i].cb()
-					Core.TimeoutCallbacks[i] = nil
+					Core.TimeoutCallbacks[i].cb();
+					Core.TimeoutCallbacks[i] = nil;
 				end
 			end
 		end
-		Wait(sleep)
+		Wait(sleep);
 	end
 end)

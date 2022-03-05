@@ -1,5 +1,8 @@
-function NGX.Scaleform.ShowFreemodeMessage(title, msg, sec)
-	local scaleform = NGX.Scaleform.Utils.RequestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
+NGX = NGX or {};
+NGX.Scaleform = NGX.Scaleform or {};
+
+NGX.Scaleform.ShowFreemodeMessage = function(title, msg, sec)
+	local scaleform = NGX.Scaleform.RequestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
 
 	BeginScaleformMovieMethod(scaleform, 'SHOW_SHARD_WASTED_MP_MESSAGE')
 	ScaleformMovieMethodAddParamTextureNameString(title)
@@ -16,8 +19,8 @@ function NGX.Scaleform.ShowFreemodeMessage(title, msg, sec)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
-function NGX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
-	local scaleform = NGX.Scaleform.Utils.RequestScaleformMovie('BREAKING_NEWS')
+NGX.Scaleform.ShowBreakingNews = function(title, msg, bottom, sec)
+	local scaleform = NGX.Scaleform.RequestScaleformMovie('BREAKING_NEWS')
 
 	BeginScaleformMovieMethod(scaleform, 'SET_TEXT')
 	ScaleformMovieMethodAddParamTextureNameString(msg)
@@ -47,8 +50,8 @@ function NGX.Scaleform.ShowBreakingNews(title, msg, bottom, sec)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
-function NGX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
-	local scaleform = NGX.Scaleform.Utils.RequestScaleformMovie('POPUP_WARNING')
+NGX.Scaleform.ShowPopupWarning = function(title, msg, bottom, sec)
+	local scaleform = NGX.Scaleform.RequestScaleformMovie('POPUP_WARNING')
 
 	BeginScaleformMovieMethod(scaleform, 'SHOW_POPUP_WARNING')
 
@@ -70,8 +73,8 @@ function NGX.Scaleform.ShowPopupWarning(title, msg, bottom, sec)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
-function NGX.Scaleform.ShowTrafficMovie(sec)
-	local scaleform = NGX.Scaleform.Utils.RequestScaleformMovie('TRAFFIC_CAM')
+NGX.Scaleform.ShowTrafficMovie = function(sec)
+	local scaleform = NGX.Scaleform.RequestScaleformMovie('TRAFFIC_CAM')
 
 	BeginScaleformMovieMethod(scaleform, 'PLAY_CAM_MOVIE')
 
@@ -87,7 +90,7 @@ function NGX.Scaleform.ShowTrafficMovie(sec)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
-function NGX.Scaleform.Utils.RequestScaleformMovie(movie)
+NGX.Scaleform.RequestScaleformMovie = function(movie)
 	local scaleform = RequestScaleformMovie(movie)
 
 	while not HasScaleformMovieLoaded(scaleform) do

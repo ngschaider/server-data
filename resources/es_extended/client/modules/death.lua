@@ -33,7 +33,7 @@ CreateThread(function()
 	end
 end)
 
-function PlayerKilledByPlayer(killerServerId, killerClientId, deathCause)
+PlayerKilledByPlayer = function(killerServerId, killerClientId, deathCause)
 	local victimCoords = GetEntityCoords(PlayerPedId())
 	local killerCoords = GetEntityCoords(GetPlayerPed(killerClientId))
 	local distance = #(victimCoords - killerCoords)
@@ -54,7 +54,7 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, deathCause)
 	TriggerServerEvent('ngx:onPlayerDeath', data)
 end
 
-function PlayerKilled(deathCause)
+PlayerKilled = function(deathCause)
 	local playerPed = PlayerPedId()
 	local victimCoords = GetEntityCoords(playerPed)
 

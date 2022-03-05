@@ -9,7 +9,7 @@ var locale = [];
  * @return {string} Returns the localized string
  *
  */
-function _U() {
+ _U = function() {
 	var args = arguments;
 	var string = args[0];
 
@@ -39,7 +39,7 @@ function _U() {
 	}
 }
 
-function formatString(args) {
+formatString = function(args) {
 	var string = capitalize(locale[args[0]]);
 
 	for (var i = 1; i < args.length; i++) {
@@ -49,12 +49,12 @@ function formatString(args) {
 	return string;
 }
 
-function capitalize(string) {
+capitalize = function(string) {
 	return string[0].toUpperCase() + string.slice(1);
 }
 
 // https://stackoverflow.com/a/35359503
-String.prototype.format = function () {
+String.prototype.format = function() {
 	var args = arguments;
 	return this.replace(/{(\d+)}/g, function (match, number) {
 		return typeof args[number] != 'undefined'

@@ -22,12 +22,16 @@ end)
 local clientCallbacks = {};
 local lastRequestId = 0;
 
-local function GetAndConsumeRequestId()
+local GetAndConsumeRequestId = function()
     lastRequestId = lastRequestId + 1;
 
     if lastRequestId > 65535 then
         lastRequestId = 0;
     end
+
+	if clientCallbacks[lastRequestId] then
+		print("overriding client callback with request id " .. lastRequestId);
+	end
 
     return lastRequestId;
 end

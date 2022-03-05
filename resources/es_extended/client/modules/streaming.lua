@@ -1,4 +1,7 @@
-function NGX.Streaming.RequestModel(modelHash, cb)
+NGX = NGX or {};
+NGX.Streaming = NGX.Streaming or {};
+
+NGX.Streaming.RequestModel = function(modelHash, cb)
 	modelHash = (type(modelHash) == 'number' and modelHash or GetHashKey(modelHash))
 
 	if not HasModelLoaded(modelHash) and IsModelInCdimage(modelHash) then
@@ -14,7 +17,7 @@ function NGX.Streaming.RequestModel(modelHash, cb)
 	end
 end
 
-function NGX.Streaming.RequestStreamedTextureDict(textureDict, cb)
+NGX.Streaming.RequestStreamedTextureDict = function(textureDict, cb)
 	if not HasStreamedTextureDictLoaded(textureDict) then
 		RequestStreamedTextureDict(textureDict)
 
@@ -28,7 +31,7 @@ function NGX.Streaming.RequestStreamedTextureDict(textureDict, cb)
 	end
 end
 
-function NGX.Streaming.RequestNamedPtfxAsset(assetName, cb)
+NGX.Streaming.RequestNamedPtfxAsset = function(assetName, cb)
 	if not HasNamedPtfxAssetLoaded(assetName) then
 		RequestNamedPtfxAsset(assetName)
 
@@ -42,7 +45,7 @@ function NGX.Streaming.RequestNamedPtfxAsset(assetName, cb)
 	end
 end
 
-function NGX.Streaming.RequestAnimSet(animSet, cb)
+NGX.Streaming.RequestAnimSet = function(animSet, cb)
 	if not HasAnimSetLoaded(animSet) then
 		RequestAnimSet(animSet)
 
@@ -56,7 +59,7 @@ function NGX.Streaming.RequestAnimSet(animSet, cb)
 	end
 end
 
-function NGX.Streaming.RequestAnimDict(animDict, cb)
+NGX.Streaming.RequestAnimDict = function(animDict, cb)
 	if not HasAnimDictLoaded(animDict) then
 		RequestAnimDict(animDict)
 
@@ -70,7 +73,7 @@ function NGX.Streaming.RequestAnimDict(animDict, cb)
 	end
 end
 
-function NGX.Streaming.RequestWeaponAsset(weaponHash, cb)
+NGX.Streaming.RequestWeaponAsset = function(weaponHash, cb)
 	if not HasWeaponAssetLoaded(weaponHash) then
 		RequestWeaponAsset(weaponHash)
 

@@ -1,10 +1,10 @@
-local function CreatePlayer()
+local CreatePlayer = function()
 	local playerId = MySQL.insert.await("INSERT INTO players (identifier) VALUES (?)", {identifier});
 
 	return playerId;
 end
 
-function ConstructPlayer(clientId)
+ConstructPlayer = function(clientId)
 	local identifier = NGX.GetIdentifier(playerId);
 
 	local results = MySQL.prepare.await("SELECT id, identifier FROM players WHERE identifier=?", {identifier});
