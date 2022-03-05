@@ -61,17 +61,6 @@ AddEventHandler('ngx:onPlayerDeath', function()
 	NGX.SetPlayerData('dead', true)
 end)
 
-AddEventHandler('skinchanger:modelLoaded', function()
-	while not NGX.PlayerLoaded do
-		Wait(100)
-	end
-	TriggerEvent('ngx:restoreLoadout')
-end)
-
-AddEventHandler('ngx:restoreLoadout', function()
-	NGX.SetPlayerData('ped', PlayerPedId());
-end)
-
 RegisterNetEvent('ngx:setAccountMoney', function(account)
 	for k,v in ipairs(NGX.PlayerData.accounts) do
 		if v.name == account.name then
