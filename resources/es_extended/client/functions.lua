@@ -1,11 +1,6 @@
 NGX = NGX or {};
 NGX.Game = NGX.Game or {};
 
-Core = {}
-Core.CurrentRequestId = 0
-Core.ServerCallbacks = {}
-Core.TimeoutCallbacks = {}
-
 NGX.Player = {};
 NGX.Character = {};
 
@@ -28,18 +23,6 @@ end;
 NGX.Character.GetAccounts = function(cb)
 	NGX.TriggerServerCallback("ngx:GetCharacterData", cb, "accounts");
 end;
-
-NGX.SetTimeout = function(msec, cb)
-	table.insert(Core.TimeoutCallbacks, {
-		time = GetGameTimer() + msec,
-		cb   = cb
-	})
-	return #Core.TimeoutCallbacks
-end
-
-NGX.ClearTimeout = function(i)
-	Core.TimeoutCallbacks[i] = nil
-end
 
 NGX.ShowNotification = function(msg)
 	BeginTextCommandThefeedPost('STRING')
@@ -548,21 +531,3 @@ end);
 RegisterNetEvent('ngx:showHelpNotification', function(msg, thisFrame, beep, duration)
 	NGX.ShowHelpNotification(msg, thisFrame, beep, duration);
 end);
-
--- SetTimeout
-CreateThread(function()
-	while true do
-		local sleep = 100;
-		if #Core.TimeoutCallbacks > 0 then
-			local currTime = GetGameTimer();
-			sleep = 0;
-			for i=1, #Core.TimeoutCallbacks, 1 do
-				if currTime >= Core.TimeoutCallbacks[i].time then
-					Core.TimeoutCallbacks[i].cb();
-					Core.TimeoutCallbacks[i] = nil;
-				end
-			end
-		end
-		Wait(sleep);
-	end
-end)
