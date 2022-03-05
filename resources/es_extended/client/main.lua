@@ -32,7 +32,7 @@ RegisterNetEvent('ngx:playerLoaded', function(xPlayer, isNew, skin)
 	TriggerEvent('ngx:loadingScreenOff')
 	ShutdownLoadingScreen()
 	ShutdownLoadingScreenNui()
-	FreezeEntityPosition(NGX.PlayerData.ped, false)
+	FreezeEntityPosition(PlayerPedId(), false)
 	
 	SetCanAttackFriendly(PlayerPedId(), true, false);
 	NetworkSetFriendlyFireOption(true);
@@ -42,42 +42,11 @@ RegisterNetEvent('ngx:onPlayerLogout', function()
 	NGX.PlayerLoaded = false
 end)
 
-RegisterNetEvent('ngx:setMaxWeight', function(newMaxWeight) 
-	NGX.PlayerData.maxWeight = newMaxWeight 
-end)
-
-local function onPlayerSpawn()
-	if NGX.PlayerLoaded then
-		NGX.SetPlayerData('ped', PlayerPedId())
-		NGX.SetPlayerData('dead', false)
-	end
-end
-
 AddEventHandler('playerSpawned', onPlayerSpawn)
 AddEventHandler('ngx:onPlayerSpawn', onPlayerSpawn)
 
-AddEventHandler('ngx:onPlayerDeath', function()
-	NGX.SetPlayerData('ped', PlayerPedId())
-	NGX.SetPlayerData('dead', true)
-end)
-
-RegisterNetEvent('ngx:setAccountMoney', function(account)
-	for k,v in ipairs(NGX.PlayerData.accounts) do
-		if v.name == account.name then
-			NGX.PlayerData.accounts[k] = account
-			break
-		end
-	end
-
-	NGX.SetPlayerData('accounts', NGX.PlayerData.accounts)
-end)
-
 RegisterNetEvent('ngx:teleport', function(coords)
-	NGX.Game.Teleport(NGX.PlayerData.ped, coords)
-end)
-
-RegisterNetEvent('ngx:setJob', function(Job)
-	NGX.SetPlayerData('job', Job)
+	NGX.Game.Teleport(PlayerPedId(), coords)
 end)
 
 RegisterNetEvent('ngx:spawnVehicle', function(vehicle)
@@ -86,10 +55,13 @@ RegisterNetEvent('ngx:spawnVehicle', function(vehicle)
 			local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 
 			if IsModelInCdimage(model) then
-				local playerCoords, playerHeading = GetEntityCoords(NGX.PlayerData.ped), GetEntityHeading(NGX.PlayerData.ped)
+				local ped = PlayerPedId();
+
+				local playerCoords = GetEntityCoords(ped);
+				local playerHeading = GetEntityHeading(ped);
 
 				NGX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
-					TaskWarpPedIntoVehicle(NGX.PlayerData.ped, vehicle, -1)
+					TaskWarpPedIntoVehicle(ped, vehicle, -1)
 				end)
 			else
 				NGX.ShowNotification('Invalid vehicle model.')
@@ -109,7 +81,7 @@ end)
 RegisterNetEvent('ngx:deleteVehicle', function(radius)
 	if radius and tonumber(radius) then
 		radius = tonumber(radius) + 0.01
-		local vehicles = NGX.Game.GetVehiclesInArea(GetEntityCoords(NGX.PlayerData.ped), radius)
+		local vehicles = NGX.Game.GetVehiclesInArea(GetEntityCoords(PlayerPedId()), radius)
 
 		for k,entity in ipairs(vehicles) do
 			local attempt = 0
@@ -127,8 +99,8 @@ RegisterNetEvent('ngx:deleteVehicle', function(radius)
 	else
 		local vehicle, attempt = NGX.Game.GetVehicleInDirection(), 0
 
-		if IsPedInAnyVehicle(NGX.PlayerData.ped, true) then
-			vehicle = GetVehiclePedIsIn(NGX.PlayerData.ped, false)
+		if IsPedInAnyVehicle(PlayerPedId(), true) then
+			vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
 		end
 
 		while not NetworkHasControlOfEntity(vehicle) and attempt < 100 and DoesEntityExist(vehicle) do
@@ -247,7 +219,7 @@ RegisterNetEvent("ngx:noclip", function(input)
 
 			local msg = "disabled"
 			if(noclip == false)then
-				noclip_pos = GetEntityCoords(NGX.PlayerData.ped, false)
+				noclip_pos = GetEntityCoords(PlayerPedId(), false)
 			end
 
 			noclip = not noclip
@@ -267,7 +239,7 @@ CreateThread(function()
 		Wait(0)
 
 		if(noclip)then
-			SetEntityCoordsNoOffset(NGX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
+			SetEntityCoordsNoOffset(PlayerPedId(), noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
 
 			if(IsControlPressed(1, 34))then
 				heading = heading + 1.5
@@ -275,7 +247,7 @@ CreateThread(function()
 					heading = 0
 				end
 
-				SetEntityHeading(NGX.PlayerData.ped, heading)
+				SetEntityHeading(PlayerPedId(), heading)
 			end
 
 			if(IsControlPressed(1, 9))then
@@ -284,23 +256,23 @@ CreateThread(function()
 					heading = 360
 				end
 
-				SetEntityHeading(NGX.PlayerData.ped, heading)
+				SetEntityHeading(PlayerPedId(), heading)
 			end
 
 			if(IsControlPressed(1, 8))then
-				noclip_pos = GetOffsetFromEntityInWorldCoords(NGX.PlayerData.ped, 0.0, 1.0, 0.0)
+				noclip_pos = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 1.0, 0.0)
 			end
 
 			if(IsControlPressed(1, 32))then
-				noclip_pos = GetOffsetFromEntityInWorldCoords(NGX.PlayerData.ped, 0.0, -1.0, 0.0)
+				noclip_pos = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, -1.0, 0.0)
 			end
 
 			if(IsControlPressed(1, 27))then
-				noclip_pos = GetOffsetFromEntityInWorldCoords(NGX.PlayerData.ped, 0.0, 0.0, 1.0)
+				noclip_pos = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 0.0, 1.0)
 			end
 
 			if(IsControlPressed(1, 173))then
-				noclip_pos = GetOffsetFromEntityInWorldCoords(NGX.PlayerData.ped, 0.0, 0.0, -1.0)
+				noclip_pos = GetOffsetFromEntityInWorldCoords(PlayerPedId(), 0.0, 0.0, -1.0)
 			end
 		else
 			Wait(200)
@@ -309,18 +281,19 @@ CreateThread(function()
 end)
 
 RegisterNetEvent("ngx:killPlayer", function()
-  SetEntityHealth(NGX.PlayerData.ped, 0)
+  SetEntityHealth(PlayerPedId(), 0)
 end)
 
 RegisterNetEvent("ngx:freezePlayer", function(input)
     local player = PlayerId()
+	local playerPed = PlayerPedId();
     if input == 'freeze' then
-        SetEntityCollision(NGX.PlayerData.ped, false)
-        FreezeEntityPosition(NGX.PlayerData.ped, true)
+        SetEntityCollision(playerPed, false)
+        FreezeEntityPosition(playerPed, true)
         SetPlayerInvincible(player, true)
     elseif input == 'unfreeze' then
-        SetEntityCollision(NGX.PlayerData.ped, true)
-	    FreezeEntityPosition(NGX.PlayerData.ped, false)
+        SetEntityCollision(playerPed, true)
+	    FreezeEntityPosition(playerPed, false)
         SetPlayerInvincible(player, false)
     end
 end)

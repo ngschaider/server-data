@@ -49,14 +49,6 @@ function NGX.ClearTimeout(i)
 	Core.TimeoutCallbacks[i] = nil
 end
 
-function NGX.SetPlayerData(key, val)
-	local current = NGX.PlayerData[key]
-	NGX.PlayerData[key] = val
-	if type(val) == 'table' or val ~= current then
-		TriggerEvent('ngx:setPlayerData', key, val, current)
-	end
-end
-
 function NGX.ShowNotification(msg)
 	BeginTextCommandThefeedPost('STRING')
 	AddTextComponentSubstringPlayerName(msg)
@@ -205,13 +197,15 @@ function NGX.Game.GetObjects() -- Leave the function for compatibility
 end
 
 function NGX.Game.GetPeds(onlyOtherPeds)
-	local peds, myPed, pool = {}, NGX.PlayerData.ped, GetGamePool('CPed')
+	local peds = {};
+	local myPed = NGX.Character.getPed(),
+	local pool = GetGamePool("CPed");
 
-	for i=1, #pool do
-        if ((onlyOtherPeds and pool[i] ~= myPed) or not onlyOtherPeds) then
-			peds[#peds + 1] = pool[i]
-        end
-    end
+	for k,v in pairs(pool) do
+		if not onlyOtherPeds or (onlyOtherPeds and v ~= myPed) then
+			table.insert(peds, v);
+		end
+	end
 
 	return peds
 end
@@ -260,7 +254,7 @@ local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coord
 	if coords then
 		coords = vector3(coords.x, coords.y, coords.z)
 	else
-		local playerPed = NGX.PlayerData.ped
+		local playerPed = NGX.Character.getPed();
 		coords = GetEntityCoords(playerPed)
 	end
 
@@ -294,7 +288,7 @@ function NGX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilt
 	if coords then
 		coords = vector3(coords.x, coords.y, coords.z)
 	else
-		local playerPed = NGX.PlayerData.ped
+		local playerPed = NGX.Character.getPed();
 		coords = GetEntityCoords(playerPed)
 	end
 
@@ -320,7 +314,7 @@ function NGX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilt
 end
 
 function NGX.Game.GetVehicleInDirection()
-	local playerPed    = NGX.PlayerData.ped
+	local playerPed    = NGX.Character.getPed();
 	local playerCoords = GetEntityCoords(playerPed)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
 	local rayHandle    = StartExpensiveSynchronousShapeTestLosProbe(playerCoords, inDirection, 10, playerPed, 0)
