@@ -52,7 +52,7 @@ RegisterNetEvent("ngx:OnPlayerJoined", function()
 	ShutdownLoadingScreen();
 	--print("ShutdownLoadingScreen");
 	
-	ESX.GetCharacters(function(characters)
+	NGX.GetCharacters(function(characters)
 		local menu = NativeUI.CreateMenu("Charakterauswahl");
 		pool:Add(menu);
 		

@@ -1,11 +1,11 @@
 local Payout = function()
-	local characters = ESX.GetCharacters();
+	local characters = NGX.GetCharacters();
 	for _, character in pairs(characters) do
 		local job = character.getJob().name;
 		local salary = character.getJob().salary;
 
 		if salary > 0 then
-			local accounts = ESX.Accounts.getAccount("society", job, "money");
+			local accounts = NGX.Accounts.getAccount("society", job, "money");
 
 			if #accounts > 0 then
 				local account = accounts[1];

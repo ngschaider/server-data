@@ -32,7 +32,7 @@ RegisterNetEvent('esx:playerLoaded', function(xPlayer, isNew, skin)
 	TriggerEvent('esx:loadingScreenOff')
 	ShutdownLoadingScreen()
 	ShutdownLoadingScreenNui()
-	FreezeEntityPosition(ESX.PlayerData.ped, false)
+	FreezeEntityPosition(NGX.PlayerData.ped, false)
 	
 	SetCanAttackFriendly(PlayerPedId(), true, false);
 	NetworkSetFriendlyFireOption(true);
@@ -40,18 +40,18 @@ end)
 
 RegisterNetEvent('esx:onPlayerLogout')
 AddEventHandler('esx:onPlayerLogout', function()
-	ESX.PlayerLoaded = false
+	NGX.PlayerLoaded = false
 end)
 
 RegisterNetEvent('esx:setMaxWeight')
 AddEventHandler('esx:setMaxWeight', function(newMaxWeight) 
-	ESX.PlayerData.maxWeight = newMaxWeight 
+	NGX.PlayerData.maxWeight = newMaxWeight 
 end)
 
 local function onPlayerSpawn()
-	if ESX.PlayerLoaded then
-		ESX.SetPlayerData('ped', PlayerPedId())
-		ESX.SetPlayerData('dead', false)
+	if NGX.PlayerLoaded then
+		NGX.SetPlayerData('ped', PlayerPedId())
+		NGX.SetPlayerData('dead', false)
 	end
 end
 
@@ -59,57 +59,57 @@ AddEventHandler('playerSpawned', onPlayerSpawn)
 AddEventHandler('esx:onPlayerSpawn', onPlayerSpawn)
 
 AddEventHandler('esx:onPlayerDeath', function()
-	ESX.SetPlayerData('ped', PlayerPedId())
-	ESX.SetPlayerData('dead', true)
+	NGX.SetPlayerData('ped', PlayerPedId())
+	NGX.SetPlayerData('dead', true)
 end)
 
 AddEventHandler('skinchanger:modelLoaded', function()
-	while not ESX.PlayerLoaded do
+	while not NGX.PlayerLoaded do
 		Wait(100)
 	end
 	TriggerEvent('esx:restoreLoadout')
 end)
 
 AddEventHandler('esx:restoreLoadout', function()
-	ESX.SetPlayerData('ped', PlayerPedId());
+	NGX.SetPlayerData('ped', PlayerPedId());
 end)
 
 RegisterNetEvent('esx:setAccountMoney')
 AddEventHandler('esx:setAccountMoney', function(account)
-	for k,v in ipairs(ESX.PlayerData.accounts) do
+	for k,v in ipairs(NGX.PlayerData.accounts) do
 		if v.name == account.name then
-			ESX.PlayerData.accounts[k] = account
+			NGX.PlayerData.accounts[k] = account
 			break
 		end
 	end
 
-	ESX.SetPlayerData('accounts', ESX.PlayerData.accounts)
+	NGX.SetPlayerData('accounts', NGX.PlayerData.accounts)
 end)
 
 RegisterNetEvent('esx:teleport')
 AddEventHandler('esx:teleport', function(coords)
-	ESX.Game.Teleport(ESX.PlayerData.ped, coords)
+	NGX.Game.Teleport(NGX.PlayerData.ped, coords)
 end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(Job)
-	ESX.SetPlayerData('job', Job)
+	NGX.SetPlayerData('job', Job)
 end)
 
 RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(vehicle)
-	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+	NGX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if admin then
 			local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 
 			if IsModelInCdimage(model) then
-				local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
+				local playerCoords, playerHeading = GetEntityCoords(NGX.PlayerData.ped), GetEntityHeading(NGX.PlayerData.ped)
 
-				ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
-					TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
+				NGX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
+					TaskWarpPedIntoVehicle(NGX.PlayerData.ped, vehicle, -1)
 				end)
 			else
-				ESX.ShowNotification('Invalid vehicle model.')
+				NGX.ShowNotification('Invalid vehicle model.')
 			end
 		end
 	end)
@@ -128,7 +128,7 @@ RegisterNetEvent('esx:deleteVehicle')
 AddEventHandler('esx:deleteVehicle', function(radius)
 	if radius and tonumber(radius) then
 		radius = tonumber(radius) + 0.01
-		local vehicles = ESX.Game.GetVehiclesInArea(GetEntityCoords(ESX.PlayerData.ped), radius)
+		local vehicles = NGX.Game.GetVehiclesInArea(GetEntityCoords(NGX.PlayerData.ped), radius)
 
 		for k,entity in ipairs(vehicles) do
 			local attempt = 0
@@ -140,14 +140,14 @@ AddEventHandler('esx:deleteVehicle', function(radius)
 			end
 
 			if DoesEntityExist(entity) and NetworkHasControlOfEntity(entity) then
-				ESX.Game.DeleteVehicle(entity)
+				NGX.Game.DeleteVehicle(entity)
 			end
 		end
 	else
-		local vehicle, attempt = ESX.Game.GetVehicleInDirection(), 0
+		local vehicle, attempt = NGX.Game.GetVehicleInDirection(), 0
 
-		if IsPedInAnyVehicle(ESX.PlayerData.ped, true) then
-			vehicle = GetVehiclePedIsIn(ESX.PlayerData.ped, false)
+		if IsPedInAnyVehicle(NGX.PlayerData.ped, true) then
+			vehicle = GetVehiclePedIsIn(NGX.PlayerData.ped, false)
 		end
 
 		while not NetworkHasControlOfEntity(vehicle) and attempt < 100 and DoesEntityExist(vehicle) do
@@ -157,7 +157,7 @@ AddEventHandler('esx:deleteVehicle', function(radius)
 		end
 
 		if DoesEntityExist(vehicle) and NetworkHasControlOfEntity(vehicle) then
-			ESX.Game.DeleteVehicle(vehicle)
+			NGX.Game.DeleteVehicle(vehicle)
 		end
 	end
 end)
@@ -174,11 +174,11 @@ local PlayerPedId = PlayerPedId
 local GetEntityCoords = GetEntityCoords
 local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
 
-	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+	NGX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if admin then
 			local blipMarker = GetFirstBlipInfoId(8)
 			if not DoesBlipExist(blipMarker) then
-					ESX.ShowNotification('No Waypoint Set.', true, false, 140)
+					NGX.ShowNotification('No Waypoint Set.', true, false, 140)
 					return 'marker'
 			end
 	
@@ -249,12 +249,12 @@ local GetGroundZFor_3dCoord = GetGroundZFor_3dCoord
 					-- If we can't find the coords, set the coords to the old ones.
 					-- We don't unpack them before since they aren't in a loop and only called once.
 					SetPedCoordsKeepVehicle(ped, oldCoords['x'], oldCoords['y'], oldCoords['z'] - 1.0)
-					ESX.ShowNotification('Successfully Teleported', true, false, 140)
+					NGX.ShowNotification('Successfully Teleported', true, false, 140)
 			end
 	
 			-- If Z coord was found, set coords in found coords.
 			SetPedCoordsKeepVehicle(ped, x, y, groundZ)
-			ESX.ShowNotification('Successfully Teleported', true, false, 140)
+			NGX.ShowNotification('Successfully Teleported', true, false, 140)
 		end
 	end)
 end)
@@ -262,13 +262,13 @@ end)
 local noclip = false
 RegisterNetEvent("esx:noclip")
 AddEventHandler("esx:noclip", function(input)
-	ESX.TriggerServerCallback("esx:isUserAdmin", function(admin)
+	NGX.TriggerServerCallback("esx:isUserAdmin", function(admin)
 		if admin then
     local player = PlayerId()
 
     local msg = "disabled"
 	if(noclip == false)then
-		noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
+		noclip_pos = GetEntityCoords(NGX.PlayerData.ped, false)
 	end
 
 	noclip = not noclip
@@ -288,7 +288,7 @@ end)
 		Wait(0)
 
 		if(noclip)then
-			SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
+			SetEntityCoordsNoOffset(NGX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
 
 			if(IsControlPressed(1, 34))then
 				heading = heading + 1.5
@@ -296,7 +296,7 @@ end)
 					heading = 0
 				end
 
-				SetEntityHeading(ESX.PlayerData.ped, heading)
+				SetEntityHeading(NGX.PlayerData.ped, heading)
 			end
 
 			if(IsControlPressed(1, 9))then
@@ -305,23 +305,23 @@ end)
 					heading = 360
 				end
 
-				SetEntityHeading(ESX.PlayerData.ped, heading)
+				SetEntityHeading(NGX.PlayerData.ped, heading)
 			end
 
 			if(IsControlPressed(1, 8))then
-				noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 1.0, 0.0)
+				noclip_pos = GetOffsetFromEntityInWorldCoords(NGX.PlayerData.ped, 0.0, 1.0, 0.0)
 			end
 
 			if(IsControlPressed(1, 32))then
-				noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, -1.0, 0.0)
+				noclip_pos = GetOffsetFromEntityInWorldCoords(NGX.PlayerData.ped, 0.0, -1.0, 0.0)
 			end
 
 			if(IsControlPressed(1, 27))then
-				noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, 1.0)
+				noclip_pos = GetOffsetFromEntityInWorldCoords(NGX.PlayerData.ped, 0.0, 0.0, 1.0)
 			end
 
 			if(IsControlPressed(1, 173))then
-				noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, -1.0)
+				noclip_pos = GetOffsetFromEntityInWorldCoords(NGX.PlayerData.ped, 0.0, 0.0, -1.0)
 			end
 		else
 			Wait(200)
@@ -331,19 +331,19 @@ end)
 
 RegisterNetEvent("esx:killPlayer")
 AddEventHandler("esx:killPlayer", function()
-  SetEntityHealth(ESX.PlayerData.ped, 0)
+  SetEntityHealth(NGX.PlayerData.ped, 0)
 end)
 
 RegisterNetEvent("esx:freezePlayer")
 AddEventHandler("esx:freezePlayer", function(input)
     local player = PlayerId()
     if input == 'freeze' then
-        SetEntityCollision(ESX.PlayerData.ped, false)
-        FreezeEntityPosition(ESX.PlayerData.ped, true)
+        SetEntityCollision(NGX.PlayerData.ped, false)
+        FreezeEntityPosition(NGX.PlayerData.ped, true)
         SetPlayerInvincible(player, true)
     elseif input == 'unfreeze' then
-        SetEntityCollision(ESX.PlayerData.ped, true)
-	    FreezeEntityPosition(ESX.PlayerData.ped, false)
+        SetEntityCollision(NGX.PlayerData.ped, true)
+	    FreezeEntityPosition(NGX.PlayerData.ped, false)
         SetPlayerInvincible(player, false)
     end
 end)

@@ -1,8 +1,8 @@
-ESX = ESX or {};
+NGX = NGX or {};
 
 local serverCallbacks = {};
 
-ESX.RegisterServerCallback = function(name, cb)
+NGX.RegisterServerCallback = function(name, cb)
 	serverCallbacks[name] = cb;
 end
 
@@ -32,7 +32,7 @@ local function GetAndConsumeRequestId()
     return lastRequestId;
 end
 
-ESX.TriggerClientCallback = function(name, clientId, cb, ...)
+NGX.TriggerClientCallback = function(name, clientId, cb, ...)
     local requestId = GetAndConsumeRequestId();
 	clientCallbacks[requestId] = cb;
 

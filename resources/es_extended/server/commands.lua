@@ -1,4 +1,4 @@
-ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args, showError)
+NGX.RegisterCommand('setcoords', 'admin', function(xPlayer, args, showError)
 	xPlayer.setCoords({x = args.x, y = args.y, z = args.z})
 end, false, {help = _U('command_setcoords'), validate = true, arguments = {
 	{name = 'x', help = _U('command_setcoords_x'), type = 'number'},
@@ -6,8 +6,8 @@ end, false, {help = _U('command_setcoords'), validate = true, arguments = {
 	{name = 'z', help = _U('command_setcoords_z'), type = 'number'}
 }})
 
-ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
-	if ESX.DoesJobExist(args.job, args.grade) then
+NGX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
+	if NGX.DoesJobExist(args.job, args.grade) then
 		args.playerId.setJob(args.job, args.grade)
 	else
 		xPlayer.showNotification(_U('command_setjob_invalid'));
@@ -18,13 +18,13 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 	{name = 'grade', help = _U('command_setjob_grade'), type = 'string'}
 }})
 
-ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
+NGX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
 	xPlayer.triggerEvent('esx:spawnVehicle', args.car)
 end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car', help = _U('command_car_car'), type = 'string'}
 }})
 
-ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
+NGX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
 	if not args.radius then 
 		args.radius = 4 
 	end
@@ -33,7 +33,7 @@ end, false, {help = _U('command_cardel'), validate = false, arguments = {
 	{name = 'radius', help = _U('command_cardel_radius'), type = 'any'}
 }})
 
-ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
+NGX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
 	if args.playerId.getAccount(args.account) then
 		args.playerId.setAccountMoney(args.account, args.amount)
 	else
@@ -45,7 +45,7 @@ end, true, {help = _U('command_setaccountmoney'), validate = true, arguments = {
 	{name = 'amount', help = _U('command_setaccountmoney_amount'), type = 'number'}
 }})
 
-ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showError)
+NGX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showError)
 	if args.playerId.getAccount(args.account) then
 		args.playerId.addAccountMoney(args.account, args.amount)
 	else
@@ -57,14 +57,14 @@ end, true, {help = _U('command_giveaccountmoney'), validate = true, arguments = 
 	{name = 'amount', help = _U('command_giveaccountmoney_amount'), type = 'number'}
 }})
 
-ESX.RegisterCommand({'clear'}, 'user', function(xPlayer, args, showError)
+NGX.RegisterCommand({'clear'}, 'user', function(xPlayer, args, showError)
 	xPlayer.triggerEvent('chat:clear')
 end, false, {help = _U('command_clear')})
 
-ESX.RegisterCommand({'clearall'}, 'admin', function(xPlayer, args, showError)
+NGX.RegisterCommand({'clearall'}, 'admin', function(xPlayer, args, showError)
 	TriggerClientEvent('chat:clear', -1)
 end, false, {help = _U('command_clearall')})
 
-ESX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
+NGX.RegisterCommand('tpm', "admin", function(xPlayer, args, showError)
 	xPlayer.triggerEvent("esx:tpm")
 end, true)

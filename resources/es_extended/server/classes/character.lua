@@ -2,7 +2,7 @@ function ConstructCharacter(clientId, characterId)
 	local self = {};
 
 	self.id = characterId;
-	self.player = ESX.GetPlayerFromClientId(clientId);;
+	self.player = NGX.GetPlayerFromId(clientId);
 
 	self.setPosition = function(coords)
 		self.triggerEvent('esx:teleport', coords);
@@ -18,7 +18,7 @@ function ConstructCharacter(clientId, characterId)
 	end
 
 	self.setMoney = function(money)
-		money = ESX.Math.Round(money);
+		money = NGX.Math.Round(money);
 		self.setAccountMoney('money', money);
 	end
 
@@ -27,12 +27,12 @@ function ConstructCharacter(clientId, characterId)
 	end
 
 	self.addMoney = function(money)
-		money = ESX.Math.Round(money);
+		money = NGX.Math.Round(money);
 		self.addAccountMoney('money', money);
 	end
 
 	self.removeMoney = function(money)
-		money = ESX.Math.Round(money);
+		money = NGX.Math.Round(money);
 		self.removeAccountMoney('money', money);
 	end
 
@@ -98,7 +98,7 @@ function ConstructCharacter(clientId, characterId)
 	end
 
 	self.setJob = function(job, grade)
-		if not ESX.DoesJobExist(job, grade) then
+		if not NGX.DoesJobExist(job, grade) then
 			return;
 		end
 		MySQL.prepare.await("UPDATE characters SET job=?, job_grade=? WHERE id=?", {job, grade, self.characterId});

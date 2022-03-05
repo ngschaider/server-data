@@ -1,10 +1,10 @@
-ESX.Trace = function(msg)
+NGX.Trace = function(msg)
 	if Config.EnableDebug then
 		print(('[^2TRACE^7] %s^7'):format(msg))
 	end
 end
 
-ESX.SetTimeout = function(msec, cb)
+NGX.SetTimeout = function(msec, cb)
 	local id = Core.TimeoutCount + 1
 
 	SetTimeout(msec, function()
@@ -20,10 +20,10 @@ ESX.SetTimeout = function(msec, cb)
 	return id
 end
 
-function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
+function NGX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	if type(name) == 'table' then
 		for k,v in ipairs(name) do
-			ESX.RegisterCommand(v, group, cb, allowConsole, suggestion)
+			NGX.RegisterCommand(v, group, cb, allowConsole, suggestion)
 		end
 
 		return
@@ -52,7 +52,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 		if not command.allowConsole and playerId == 0 then
 			print(('[^3WARNING^7] ^5%s'):format(_U('commanderror_console')))
 		else
-			local xPlayer, error = ESX.GetPlayerFromId(playerId), nil
+			local xPlayer, error = NGX.GetPlayerFromId(playerId), nil
 
 			if command.suggestion then
 				if command.suggestion.validate then
@@ -80,7 +80,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 								if args[k] == 'me' then targetPlayer = playerId end
 
 								if targetPlayer then
-									local xTargetPlayer = ESX.GetPlayerFromId(targetPlayer)
+									local xTargetPlayer = NGX.GetPlayerFromId(targetPlayer)
 
 									if xTargetPlayer then
 										if v.type == 'player' then
@@ -97,13 +97,13 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 							elseif v.type == 'string' then
 								newArgs[v.name] = args[k]
 							elseif v.type == 'item' then
-								if ESX.Items[args[k]] then
+								if NGX.Items[args[k]] then
 									newArgs[v.name] = args[k]
 								else
 									error = _U('commanderror_invaliditem')
 								end
 							elseif v.type == 'weapon' then
-								if ESX.GetWeapon(args[k]) then
+								if NGX.GetWeapon(args[k]) then
 									newArgs[v.name] = string.upper(args[k])
 								else
 									error = _U('commanderror_invalidweapon')
@@ -147,7 +147,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 	end
 end
 
-function ESX.ClearTimeout(id)
+function NGX.ClearTimeout(id)
 	Core.CancelledTimeouts[id] = true
 end
 
@@ -170,7 +170,7 @@ function Core.SavePlayer(xPlayer, cb)
 end
 
 function Core.SavePlayers(cb)
-	--[[local xPlayers = ESX.GetExtendedPlayers()
+	--[[local xPlayers = NGX.GetExtendedPlayers()
 	local count = #xPlayers
 	if count > 0 then
 		local parameters = {}
@@ -197,23 +197,23 @@ function Core.SavePlayers(cb)
 	end]]
 end
 
-ESX.GetPlayers = function()
-	return ESX.Players;
+NGX.GetPlayers = function()
+	return NGX.Players;
 end
 
-function ESX.GetPlayerFromId(source)
-	return ESX.Players[tonumber(source)]
+function NGX.GetPlayerFromId(source)
+	return NGX.Players[tonumber(source)]
 end
 
-function ESX.GetPlayerFromIdentifier(identifier)
-	for k,v in pairs(ESX.Players) do
+function NGX.GetPlayerFromIdentifier(identifier)
+	for k,v in pairs(NGX.Players) do
 		if v.identifier == identifier then
 			return v
 		end
 	end
 end
 
-ESX.GetIdentifier = function(src)
+NGX.GetIdentifier = function(src)
 	for k,v in pairs(GetPlayerIdentifiers(src)) do
 		if string.match(v, 'license:') then
 			local identifier = string.gsub(v, 'license:', '')
@@ -222,17 +222,17 @@ ESX.GetIdentifier = function(src)
 	end
 end
 
-function ESX.RegisterUsableItem(item, cb)
+function NGX.RegisterUsableItem(item, cb)
 	Core.UsableItemsCallbacks[item] = cb
 end
 
-function ESX.UseItem(source, item, data)
+function NGX.UseItem(source, item, data)
 	Core.UsableItemsCallbacks[item](source, item, data)
 end
 
-function ESX.GetItemLabel(item)
-	if ESX.Items[item] then
-		return ESX.Items[item].label
+function NGX.GetItemLabel(item)
+	if NGX.Items[item] then
+		return NGX.Items[item].label
 	end
 
 	item = exports.ox_inventory:Items(item);
@@ -241,11 +241,11 @@ function ESX.GetItemLabel(item)
 	end
 end
 
-function ESX.GetJobs()
-	return ESX.Jobs
+function NGX.GetJobs()
+	return NGX.Jobs
 end
 
-function ESX.GetUsableItems()
+function NGX.GetUsableItems()
 	local Usables = {}
 	for k in pairs(Core.UsableItemsCallbacks) do
 		Usables[k] = true
@@ -253,11 +253,11 @@ function ESX.GetUsableItems()
 	return Usables
 end
 
-function ESX.DoesJobExist(job, grade)
+function NGX.DoesJobExist(job, grade)
 	grade = tostring(grade)
 
 	if job and grade then
-		if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then
+		if NGX.Jobs[job] and NGX.Jobs[job].grades[grade] then
 			return true
 		end
 	end
@@ -270,7 +270,7 @@ function Core.IsPlayerAdmin(playerId)
 		return true
 	end
 
-	local xPlayer = ESX.GetPlayerFromId(playerId)
+	local xPlayer = NGX.GetPlayerFromId(playerId)
 
 	if xPlayer then
 		if xPlayer.group == 'admin' then

@@ -1,7 +1,7 @@
-ESX.Table = {}
+NGX.Table = {}
 
 -- nil proof alternative to #table
-function ESX.Table.SizeOf(t)
+function NGX.Table.SizeOf(t)
 	local count = 0
 
 	for _,_ in pairs(t) do
@@ -11,13 +11,13 @@ function ESX.Table.SizeOf(t)
 	return count
 end
 
-function ESX.Table.Set(t)
+function NGX.Table.Set(t)
 	local set = {}
 	for k,v in ipairs(t) do set[v] = true end
 	return set
 end
 
-function ESX.Table.IndexOf(t, value)
+function NGX.Table.IndexOf(t, value)
 	for i=1, #t, 1 do
 		if t[i] == value then
 			return i
@@ -27,11 +27,11 @@ function ESX.Table.IndexOf(t, value)
 	return -1
 end
 
-ESX.Table.Contains = function(t, value)
-	return ESX.Table.IndexOf(t, value) ~= -1;
+NGX.Table.Contains = function(t, value)
+	return NGX.Table.IndexOf(t, value) ~= -1;
 end
 
-ESX.Table.ContainsKey = function(t, value)
+NGX.Table.ContainsKey = function(t, value)
 	for k,v in pairs(t) do
 		if k == value then
 			return true;
@@ -41,7 +41,7 @@ ESX.Table.ContainsKey = function(t, value)
 	return false;
 end
 
-function ESX.Table.LastIndexOf(t, value)
+function NGX.Table.LastIndexOf(t, value)
 	for i=#t, 1, -1 do
 		if t[i] == value then
 			return i
@@ -51,7 +51,7 @@ function ESX.Table.LastIndexOf(t, value)
 	return -1
 end
 
-function ESX.Table.Find(t, cb)
+function NGX.Table.Find(t, cb)
 	for i=1, #t, 1 do
 		if cb(t[i]) then
 			return t[i]
@@ -61,7 +61,7 @@ function ESX.Table.Find(t, cb)
 	return nil
 end
 
-function ESX.Table.FindIndex(t, cb)
+function NGX.Table.FindIndex(t, cb)
 	for i=1, #t, 1 do
 		if cb(t[i]) then
 			return i
@@ -71,7 +71,7 @@ function ESX.Table.FindIndex(t, cb)
 	return -1
 end
 
-function ESX.Table.Filter(t, cb)
+function NGX.Table.Filter(t, cb)
 	local newTable = {}
 
 	for i=1, #t, 1 do
@@ -83,7 +83,7 @@ function ESX.Table.Filter(t, cb)
 	return newTable
 end
 
-function ESX.Table.Map(t, cb)
+function NGX.Table.Map(t, cb)
 	local newTable = {}
 
 	for i=1, #t, 1 do
@@ -93,7 +93,7 @@ function ESX.Table.Map(t, cb)
 	return newTable
 end
 
-function ESX.Table.Reverse(t)
+function NGX.Table.Reverse(t)
 	local newTable = {}
 
 	for i=#t, 1, -1 do
@@ -103,7 +103,7 @@ function ESX.Table.Reverse(t)
 	return newTable
 end
 
-function ESX.Table.Clone(t)
+function NGX.Table.Clone(t)
 	if type(t) ~= 'table' then return t end
 
 	local meta = getmetatable(t)
@@ -111,7 +111,7 @@ function ESX.Table.Clone(t)
 
 	for k,v in pairs(t) do
 		if type(v) == 'table' then
-			target[k] = ESX.Table.Clone(v)
+			target[k] = NGX.Table.Clone(v)
 		else
 			target[k] = v
 		end
@@ -122,8 +122,8 @@ function ESX.Table.Clone(t)
 	return target
 end
 
-function ESX.Table.Concat(t1, t2)
-	local t3 = ESX.Table.Clone(t1)
+function NGX.Table.Concat(t1, t2)
+	local t3 = NGX.Table.Clone(t1)
 
 	for i=1, #t2, 1 do
 		table.insert(t3, t2[i])
@@ -132,7 +132,7 @@ function ESX.Table.Concat(t1, t2)
 	return t3
 end
 
-function ESX.Table.Join(t, sep)
+function NGX.Table.Join(t, sep)
 	local sep = sep or ','
 	local str = ''
 
@@ -149,7 +149,7 @@ end
 
 -- Credit: https://stackoverflow.com/a/15706820
 -- Description: sort function for pairs
-function ESX.Table.Sort(t, order)
+function NGX.Table.Sort(t, order)
 	-- collect the keys
 	local keys = {}
 

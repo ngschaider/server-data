@@ -1,7 +1,7 @@
-ESX = {}
-ESX.Players = {}
-ESX.Jobs = {}
-ESX.Items = {}
+NGX = {}
+NGX.Players = {}
+NGX.Jobs = {}
+NGX.Items = {}
 Core = {}
 Core.UsableItemsCallbacks = {}
 Core.ServerCallbacks = {}
@@ -12,11 +12,11 @@ Core.Pickups = {}
 Core.PickupId = 0
 
 AddEventHandler('esx:getSharedObject', function(cb)
-	cb(ESX);
+	cb(NGX);
 end);
 
 exports('getSharedObject', function()
-	return ESX;
+	return NGX;
 end);
 
 

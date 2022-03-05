@@ -1,4 +1,4 @@
-ESX = ESX or {};
+NGX = NGX or {};
 
 local serverCallbacks = {};
 local lastRequestId = 0;
@@ -13,14 +13,14 @@ local function GetAndConsumeRequestId()
     return lastRequestId;
 end
 
-ESX.TriggerServerCallback = function(name, cb, ...)
+NGX.TriggerServerCallback = function(name, cb, ...)
     local requestId = GetAndConsumeRequestId();
 	serverCallbacks[requestId] = cb;
 
-	TriggerServerEvent('esx:ServerCallbackRequest', name, requestId, ...)
+	TriggerServerEvent('ngx:ServerCallbackRequest', name, requestId, ...)
 end
 
-RegisterNetEvent('esx:ServerCallbackResponse', function(requestId, ...)
+RegisterNetEvent('ngx:ServerCallbackResponse', function(requestId, ...)
 	serverCallbacks[requestId](...);
 	serverCallbacks[requestId] = nil;
 end)
@@ -29,7 +29,7 @@ end)
 
 local clientCallbacks = {};
 
-ESX.RegisterClientCallback = function(name, cb)
+NGX.RegisterClientCallback = function(name, cb)
     clientCallbacks[name] = cb;
 end
 

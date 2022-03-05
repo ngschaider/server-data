@@ -5,7 +5,7 @@ local function CreatePlayer()
 end
 
 function ConstructPlayer(clientId)
-	local identifier = ESX.GetIdentifier(playerId);
+	local identifier = NGX.GetIdentifier(playerId);
 
 	local results = MySQL.prepare.await("SELECT id, identifier FROM players WHERE identifier=?", {identifier});
 	if #results > 0 then
@@ -44,11 +44,11 @@ function ConstructPlayer(clientId)
 	end;
 
 	self.showNotification = function(msg)
-		self.triggerEvent('esx:showNotification', msg)
+		self.triggerEvent('ngx:showNotification', msg)
 	end;
 
 	self.showHelpNotification = function(msg, thisFrame, beep, duration)
-		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
+		self.triggerEvent('ngx:showHelpNotification', msg, thisFrame, beep, duration)
 	end;
 
 	return self;

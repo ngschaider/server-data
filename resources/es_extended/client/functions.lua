@@ -1,49 +1,50 @@
-ESX                           = {}
+NGX = NGX or {};
+
 Core = {}
 Core.CurrentRequestId = 0
 Core.ServerCallbacks = {}
 Core.TimeoutCallbacks = {}
 
-ESX.UI                        = {}
-ESX.UI.HUD                    = {}
-ESX.UI.HUD.RegisteredElements = {}
-ESX.UI.Menu                   = {}
-ESX.UI.Menu.RegisteredTypes   = {}
-ESX.UI.Menu.Opened            = {}
+NGX.UI                        = {}
+NGX.UI.HUD                    = {}
+NGX.UI.HUD.RegisteredElements = {}
+NGX.UI.Menu                   = {}
+NGX.UI.Menu.RegisteredTypes   = {}
+NGX.UI.Menu.Opened            = {}
 
-ESX.Game                      = {}
-ESX.Game.Utils                = {}
+NGX.Game                      = {}
+NGX.Game.Utils                = {}
 
-ESX.Scaleform                 = {}
-ESX.Scaleform.Utils           = {}
+NGX.Scaleform                 = {}
+NGX.Scaleform.Utils           = {}
 
-ESX.Streaming                 = {}
+NGX.Streaming                 = {}
 
-ESX.Player = {};
+NGX.Player = {};
 
-ESX.GetCharacters = function(cb)
-	ESX.TriggerServerCallback("ngx:GetCharacters", cb);
+NGX.GetCharacters = function(cb)
+	NGX.TriggerServerCallback("ngx:GetCharacters", cb);
 end
 
-ESX.Character = {};
+NGX.Character = {};
 
-ESX.Character.getJob = function(cb)
-	ESX.TriggerServerCallback("ngx:GetCharacterData", cb, "job");
+NGX.Character.getJob = function(cb)
+	NGX.TriggerServerCallback("ngx:GetCharacterData", cb, "job");
 end;
 
-ESX.Character.getName = function(cb)
-	ESX.TriggerServerCallback("ngx:GetCharacterData", cb, "name");
+NGX.Character.getName = function(cb)
+	NGX.TriggerServerCallback("ngx:GetCharacterData", cb, "name");
 end;
 
-ESX.Character.getAccount = function(accountName, cb)
-	ESX.TriggerServerCallback("ngx:GetCharacterData", cb, "account", accountName);
+NGX.Character.getAccount = function(accountName, cb)
+	NGX.TriggerServerCallback("ngx:GetCharacterData", cb, "account", accountName);
 end;
 
-ESX.Character.getAccounts = function(cb)
-	ESX.TriggerServerCallback("ngx:GetCharacterData", cb, "accounts");
+NGX.Character.getAccounts = function(cb)
+	NGX.TriggerServerCallback("ngx:GetCharacterData", cb, "accounts");
 end;
 
-function ESX.SetTimeout(msec, cb)
+function NGX.SetTimeout(msec, cb)
 	table.insert(Core.TimeoutCallbacks, {
 		time = GetGameTimer() + msec,
 		cb   = cb
@@ -51,11 +52,11 @@ function ESX.SetTimeout(msec, cb)
 	return #Core.TimeoutCallbacks
 end
 
-function ESX.ClearTimeout(i)
+function NGX.ClearTimeout(i)
 	Core.TimeoutCallbacks[i] = nil
 end
 
-function ESX.SearchInventory(items, count)
+function NGX.SearchInventory(items, count)
 	if type(items) == 'string' then items = {items} end
 
 	local returnData = {}
@@ -65,7 +66,7 @@ function ESX.SearchInventory(items, count)
 		local itemName = items[i]
 		returnData[itemName] = count and 0
 
-		for _, item in pairs(ESX.PlayerData.inventory) do
+		for _, item in pairs(NGX.PlayerData.inventory) do
 			if item.name == itemName then
 				if count then
 					returnData[itemName] = returnData[itemName] + item.count
@@ -81,9 +82,9 @@ function ESX.SearchInventory(items, count)
 	end
 end
 
-function ESX.SetPlayerData(key, val)
-	local current = ESX.PlayerData[key]
-	ESX.PlayerData[key] = val
+function NGX.SetPlayerData(key, val)
+	local current = NGX.PlayerData[key]
+	NGX.PlayerData[key] = val
 	if key ~= 'inventory' and key ~= 'loadout' then
 		if type(val) == 'table' or val ~= current then
 			TriggerEvent('esx:setPlayerData', key, val, current)
@@ -91,13 +92,13 @@ function ESX.SetPlayerData(key, val)
 	end
 end
 
-function ESX.ShowNotification(msg)
+function NGX.ShowNotification(msg)
 	BeginTextCommandThefeedPost('STRING')
 	AddTextComponentSubstringPlayerName(msg)
 	EndTextCommandThefeedPostTicker(0,1)
 end
 
-function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+function NGX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	if saveToBrief == nil then saveToBrief = true end
 	AddTextEntry('esxAdvancedNotification', msg)
 	BeginTextCommandThefeedPost('esxAdvancedNotification')
@@ -106,7 +107,7 @@ function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconTyp
 	EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
 end
 
-function ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
+function NGX.ShowHelpNotification(msg, thisFrame, beep, duration)
 	AddTextEntry('esxHelpNotification', msg)
 
 	if thisFrame then
@@ -118,7 +119,7 @@ function ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 	end
 end
 
-function ESX.ShowFloatingHelpNotification(msg, coords)
+function NGX.ShowFloatingHelpNotification(msg, coords)
 	AddTextEntry('esxFloatingHelpNotification', msg)
 	SetFloatingHelpTextWorldPosition(1, coords)
 	SetFloatingHelpTextStyle(1, 1, 2, -1, 3, 0)
@@ -126,18 +127,18 @@ function ESX.ShowFloatingHelpNotification(msg, coords)
 	EndTextCommandDisplayHelp(2, false, false, -1)
 end
 
-function ESX.UI.HUD.SetDisplay(opacity)
+function NGX.UI.HUD.SetDisplay(opacity)
 	SendNUIMessage({
 		action  = 'setHUDDisplay',
 		opacity = opacity
 	})
 end
 
-function ESX.UI.HUD.RegisterElement(name, index, priority, html, data)
+function NGX.UI.HUD.RegisterElement(name, index, priority, html, data)
 	local found = false
 
-	for i=1, #ESX.UI.HUD.RegisteredElements, 1 do
-		if ESX.UI.HUD.RegisteredElements[i] == name then
+	for i=1, #NGX.UI.HUD.RegisteredElements, 1 do
+		if NGX.UI.HUD.RegisteredElements[i] == name then
 			found = true
 			break
 		end
@@ -147,7 +148,7 @@ function ESX.UI.HUD.RegisterElement(name, index, priority, html, data)
 		return
 	end
 
-	ESX.UI.HUD.RegisteredElements[#ESX.UI.HUD.RegisteredElements + 1] = name
+	NGX.UI.HUD.RegisteredElements[#NGX.UI.HUD.RegisteredElements + 1] = name
 
 	SendNUIMessage({
 		action    = 'insertHUDElement',
@@ -158,13 +159,13 @@ function ESX.UI.HUD.RegisterElement(name, index, priority, html, data)
 		data      = data
 	})
 
-	ESX.UI.HUD.UpdateElement(name, data)
+	NGX.UI.HUD.UpdateElement(name, data)
 end
 
-function ESX.UI.HUD.RemoveElement(name)
-	for i=1, #ESX.UI.HUD.RegisteredElements, 1 do
-		if ESX.UI.HUD.RegisteredElements[i] == name then
-			table.remove(ESX.UI.HUD.RegisteredElements, i)
+function NGX.UI.HUD.RemoveElement(name)
+	for i=1, #NGX.UI.HUD.RegisteredElements, 1 do
+		if NGX.UI.HUD.RegisteredElements[i] == name then
+			table.remove(NGX.UI.HUD.RegisteredElements, i)
 			break
 		end
 	end
@@ -175,14 +176,14 @@ function ESX.UI.HUD.RemoveElement(name)
 	})
 end
 
-function ESX.UI.HUD.Reset()
+function NGX.UI.HUD.Reset()
 	SendNUIMessage({
 		action    = 'resetHUDElements'
 	})
-	ESX.UI.HUD.RegisteredElements = {}
+	NGX.UI.HUD.RegisteredElements = {}
 end
 
-function ESX.UI.HUD.UpdateElement(name, data)
+function NGX.UI.HUD.UpdateElement(name, data)
 	SendNUIMessage({
 		action = 'updateHUDElement',
 		name   = name,
@@ -190,14 +191,14 @@ function ESX.UI.HUD.UpdateElement(name, data)
 	})
 end
 
-function ESX.UI.Menu.RegisterType(type, open, close)
-	ESX.UI.Menu.RegisteredTypes[type] = {
+function NGX.UI.Menu.RegisterType(type, open, close)
+	NGX.UI.Menu.RegisteredTypes[type] = {
 		open   = open,
 		close  = close
 	}
 end
 
-function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, close)
+function NGX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, close)
 	local menu = {}
 
 	menu.type      = type
@@ -210,12 +211,12 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
 
 	menu.close = function()
 
-		ESX.UI.Menu.RegisteredTypes[type].close(namespace, name)
+		NGX.UI.Menu.RegisteredTypes[type].close(namespace, name)
 
-		for i=1, #ESX.UI.Menu.Opened, 1 do
-			if ESX.UI.Menu.Opened[i] then
-				if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
-					ESX.UI.Menu.Opened[i] = nil
+		for i=1, #NGX.UI.Menu.Opened, 1 do
+			if NGX.UI.Menu.Opened[i] then
+				if NGX.UI.Menu.Opened[i].type == type and NGX.UI.Menu.Opened[i].namespace == namespace and NGX.UI.Menu.Opened[i].name == name then
+					NGX.UI.Menu.Opened[i] = nil
 				end
 			end
 		end
@@ -247,7 +248,7 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
 	end
 
 	menu.refresh = function()
-		ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, menu.data)
+		NGX.UI.Menu.RegisteredTypes[type].open(namespace, name, menu.data)
 	end
 
 	menu.setElement = function(i, key, val)
@@ -276,51 +277,51 @@ function ESX.UI.Menu.Open(type, namespace, name, data, submit, cancel, change, c
 		end
 	end
 
-	ESX.UI.Menu.Opened[#ESX.UI.Menu.Opened + 1] = menu
-	ESX.UI.Menu.RegisteredTypes[type].open(namespace, name, data)
+	NGX.UI.Menu.Opened[#NGX.UI.Menu.Opened + 1] = menu
+	NGX.UI.Menu.RegisteredTypes[type].open(namespace, name, data)
 
 	return menu
 end
 
-function ESX.UI.Menu.Close(type, namespace, name)
-	for i=1, #ESX.UI.Menu.Opened, 1 do
-		if ESX.UI.Menu.Opened[i] then
-			if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
-				ESX.UI.Menu.Opened[i].close()
-				ESX.UI.Menu.Opened[i] = nil
+function NGX.UI.Menu.Close(type, namespace, name)
+	for i=1, #NGX.UI.Menu.Opened, 1 do
+		if NGX.UI.Menu.Opened[i] then
+			if NGX.UI.Menu.Opened[i].type == type and NGX.UI.Menu.Opened[i].namespace == namespace and NGX.UI.Menu.Opened[i].name == name then
+				NGX.UI.Menu.Opened[i].close()
+				NGX.UI.Menu.Opened[i] = nil
 			end
 		end
 	end
 end
 
-function ESX.UI.Menu.CloseAll()
-	for i=1, #ESX.UI.Menu.Opened, 1 do
-		if ESX.UI.Menu.Opened[i] then
-			ESX.UI.Menu.Opened[i].close()
-			ESX.UI.Menu.Opened[i] = nil
+function NGX.UI.Menu.CloseAll()
+	for i=1, #NGX.UI.Menu.Opened, 1 do
+		if NGX.UI.Menu.Opened[i] then
+			NGX.UI.Menu.Opened[i].close()
+			NGX.UI.Menu.Opened[i] = nil
 		end
 	end
 end
 
-function ESX.UI.Menu.GetOpened(type, namespace, name)
-	for i=1, #ESX.UI.Menu.Opened, 1 do
-		if ESX.UI.Menu.Opened[i] then
-			if ESX.UI.Menu.Opened[i].type == type and ESX.UI.Menu.Opened[i].namespace == namespace and ESX.UI.Menu.Opened[i].name == name then
-				return ESX.UI.Menu.Opened[i]
+function NGX.UI.Menu.GetOpened(type, namespace, name)
+	for i=1, #NGX.UI.Menu.Opened, 1 do
+		if NGX.UI.Menu.Opened[i] then
+			if NGX.UI.Menu.Opened[i].type == type and NGX.UI.Menu.Opened[i].namespace == namespace and NGX.UI.Menu.Opened[i].name == name then
+				return NGX.UI.Menu.Opened[i]
 			end
 		end
 	end
 end
 
-function ESX.UI.Menu.GetOpenedMenus()
-	return ESX.UI.Menu.Opened
+function NGX.UI.Menu.GetOpenedMenus()
+	return NGX.UI.Menu.Opened
 end
 
-function ESX.UI.Menu.IsOpen(type, namespace, name)
-	return ESX.UI.Menu.GetOpened(type, namespace, name) ~= nil
+function NGX.UI.Menu.IsOpen(type, namespace, name)
+	return NGX.UI.Menu.GetOpened(type, namespace, name) ~= nil
 end
 
-function ESX.UI.ShowInventoryItemNotification(add, item, count)
+function NGX.UI.ShowInventoryItemNotification(add, item, count)
 	SendNUIMessage({
 		action = 'inventoryNotification',
 		add    = add,
@@ -329,7 +330,7 @@ function ESX.UI.ShowInventoryItemNotification(add, item, count)
 	})
 end
 
-function ESX.Game.GetPedMugshot(ped, transparent)
+function NGX.Game.GetPedMugshot(ped, transparent)
 	if DoesEntityExist(ped) then
 		local mugshot
 
@@ -349,7 +350,7 @@ function ESX.Game.GetPedMugshot(ped, transparent)
 	end
 end
 
-function ESX.Game.Teleport(entity, coords, cb)
+function NGX.Game.Teleport(entity, coords, cb)
 	local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
 
 	if DoesEntityExist(entity) then
@@ -367,13 +368,13 @@ function ESX.Game.Teleport(entity, coords, cb)
 	end
 end
 
-function ESX.Game.SpawnObject(object, coords, cb, networked)
+function NGX.Game.SpawnObject(object, coords, cb, networked)
 	local model = type(object) == 'number' and object or GetHashKey(object)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
 
 	CreateThread(function()
-		ESX.Streaming.RequestModel(model)
+		NGX.Streaming.RequestModel(model)
 
 		local obj = CreateObject(model, vector.xyz, networked, false, true)
 		if cb then
@@ -382,26 +383,26 @@ function ESX.Game.SpawnObject(object, coords, cb, networked)
 	end)
 end
 
-function ESX.Game.SpawnLocalObject(object, coords, cb)
-	ESX.Game.SpawnObject(object, coords, cb, false)
+function NGX.Game.SpawnLocalObject(object, coords, cb)
+	NGX.Game.SpawnObject(object, coords, cb, false)
 end
 
-function ESX.Game.DeleteVehicle(vehicle)
+function NGX.Game.DeleteVehicle(vehicle)
 	SetEntityAsMissionEntity(vehicle, false, true)
 	DeleteVehicle(vehicle)
 end
 
-function ESX.Game.DeleteObject(object)
+function NGX.Game.DeleteObject(object)
 	SetEntityAsMissionEntity(object, false, true)
 	DeleteObject(object)
 end
 
-function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
+function NGX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
 	CreateThread(function()
-		ESX.Streaming.RequestModel(model)
+		NGX.Streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
 
@@ -426,23 +427,23 @@ function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
 	end)
 end
 
-function ESX.Game.SpawnLocalVehicle(vehicle, coords, heading, cb)
-	ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, false)
+function NGX.Game.SpawnLocalVehicle(vehicle, coords, heading, cb)
+	NGX.Game.SpawnVehicle(vehicle, coords, heading, cb, false)
 end
 
-function ESX.Game.IsVehicleEmpty(vehicle)
+function NGX.Game.IsVehicleEmpty(vehicle)
 	local passengers = GetVehicleNumberOfPassengers(vehicle)
 	local driverSeatFree = IsVehicleSeatFree(vehicle, -1)
 
 	return passengers == 0 and driverSeatFree
 end
 
-function ESX.Game.GetObjects() -- Leave the function for compatibility
+function NGX.Game.GetObjects() -- Leave the function for compatibility
 	return GetGamePool('CObject')
 end
 
-function ESX.Game.GetPeds(onlyOtherPeds)
-	local peds, myPed, pool = {}, ESX.PlayerData.ped, GetGamePool('CPed')
+function NGX.Game.GetPeds(onlyOtherPeds)
+	local peds, myPed, pool = {}, NGX.PlayerData.ped, GetGamePool('CPed')
 
 	for i=1, #pool do
         if ((onlyOtherPeds and pool[i] ~= myPed) or not onlyOtherPeds) then
@@ -453,11 +454,11 @@ function ESX.Game.GetPeds(onlyOtherPeds)
 	return peds
 end
 
-function ESX.Game.GetVehicles() -- Leave the function for compatibility
+function NGX.Game.GetVehicles() -- Leave the function for compatibility
 	return GetGamePool('CVehicle')
 end
 
-function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
+function NGX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
 	local players, myPlayer = {}, PlayerId()
 
 	for k,player in ipairs(GetActivePlayers()) do
@@ -475,20 +476,20 @@ function ESX.Game.GetPlayers(onlyOtherPlayers, returnKeyValue, returnPeds)
 	return players
 end
 
-function ESX.Game.GetClosestObject(coords, modelFilter)
-	return ESX.Game.GetClosestEntity(ESX.Game.GetObjects(), false, coords, modelFilter)
+function NGX.Game.GetClosestObject(coords, modelFilter)
+	return NGX.Game.GetClosestEntity(NGX.Game.GetObjects(), false, coords, modelFilter)
 end
 
-function ESX.Game.GetClosestPed(coords, modelFilter)
-	return ESX.Game.GetClosestEntity(ESX.Game.GetPeds(true), false, coords, modelFilter)
+function NGX.Game.GetClosestPed(coords, modelFilter)
+	return NGX.Game.GetClosestEntity(NGX.Game.GetPeds(true), false, coords, modelFilter)
 end
 
-function ESX.Game.GetClosestPlayer(coords)
-	return ESX.Game.GetClosestEntity(ESX.Game.GetPlayers(true, true), true, coords, nil)
+function NGX.Game.GetClosestPlayer(coords)
+	return NGX.Game.GetClosestEntity(NGX.Game.GetPlayers(true, true), true, coords, nil)
 end
 
-function ESX.Game.GetClosestVehicle(coords, modelFilter)
-	return ESX.Game.GetClosestEntity(ESX.Game.GetVehicles(), false, coords, modelFilter)
+function NGX.Game.GetClosestVehicle(coords, modelFilter)
+	return NGX.Game.GetClosestEntity(NGX.Game.GetVehicles(), false, coords, modelFilter)
 end
 
 local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coords, maxDistance)
@@ -497,7 +498,7 @@ local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coord
 	if coords then
 		coords = vector3(coords.x, coords.y, coords.z)
 	else
-		local playerPed = ESX.PlayerData.ped
+		local playerPed = NGX.PlayerData.ped
 		coords = GetEntityCoords(playerPed)
 	end
 
@@ -512,26 +513,26 @@ local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coord
 	return nearbyEntities
 end
 
-function ESX.Game.GetPlayersInArea(coords, maxDistance)
-	return EnumerateEntitiesWithinDistance(ESX.Game.GetPlayers(true, true), true, coords, maxDistance)
+function NGX.Game.GetPlayersInArea(coords, maxDistance)
+	return EnumerateEntitiesWithinDistance(NGX.Game.GetPlayers(true, true), true, coords, maxDistance)
 end
 
-function ESX.Game.GetVehiclesInArea(coords, maxDistance)
-	return EnumerateEntitiesWithinDistance(ESX.Game.GetVehicles(), false, coords, maxDistance)
+function NGX.Game.GetVehiclesInArea(coords, maxDistance)
+	return EnumerateEntitiesWithinDistance(NGX.Game.GetVehicles(), false, coords, maxDistance)
 end
 
-function ESX.Game.IsSpawnPointClear(coords, maxDistance)
-	return #ESX.Game.GetVehiclesInArea(coords, maxDistance) == 0
+function NGX.Game.IsSpawnPointClear(coords, maxDistance)
+	return #NGX.Game.GetVehiclesInArea(coords, maxDistance) == 0
 end
 
 
-function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilter)
+function NGX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilter)
 	local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil
 
 	if coords then
 		coords = vector3(coords.x, coords.y, coords.z)
 	else
-		local playerPed = ESX.PlayerData.ped
+		local playerPed = NGX.PlayerData.ped
 		coords = GetEntityCoords(playerPed)
 	end
 
@@ -556,8 +557,8 @@ function ESX.Game.GetClosestEntity(entities, isPlayerEntities, coords, modelFilt
 	return closestEntity, closestEntityDistance
 end
 
-function ESX.Game.GetVehicleInDirection()
-	local playerPed    = ESX.PlayerData.ped
+function NGX.Game.GetVehicleInDirection()
+	local playerPed    = NGX.PlayerData.ped
 	local playerCoords = GetEntityCoords(playerPed)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
 	local rayHandle    = StartExpensiveSynchronousShapeTestLosProbe(playerCoords, inDirection, 10, playerPed, 0)
@@ -571,7 +572,7 @@ function ESX.Game.GetVehicleInDirection()
 	return nil
 end
 
-function ESX.Game.GetVehicleProperties(vehicle)
+function NGX.Game.GetVehicleProperties(vehicle)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
@@ -587,15 +588,15 @@ function ESX.Game.GetVehicleProperties(vehicle)
 		return {
 			model             = GetEntityModel(vehicle),
 
-			plate             = ESX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
+			plate             = NGX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
 			plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
 
-			bodyHealth        = ESX.Math.Round(GetVehicleBodyHealth(vehicle), 1),
-			engineHealth      = ESX.Math.Round(GetVehicleEngineHealth(vehicle), 1),
-			tankHealth        = ESX.Math.Round(GetVehiclePetrolTankHealth(vehicle), 1),
+			bodyHealth        = NGX.Math.Round(GetVehicleBodyHealth(vehicle), 1),
+			engineHealth      = NGX.Math.Round(GetVehicleEngineHealth(vehicle), 1),
+			tankHealth        = NGX.Math.Round(GetVehiclePetrolTankHealth(vehicle), 1),
 
-			fuelLevel         = ESX.Math.Round(GetVehicleFuelLevel(vehicle), 1),
-			dirtLevel         = ESX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
+			fuelLevel         = NGX.Math.Round(GetVehicleFuelLevel(vehicle), 1),
+			dirtLevel         = NGX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
 			color1            = colorPrimary,
 			color2            = colorSecondary,
 
@@ -672,7 +673,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 	end
 end
 
-function ESX.Game.SetVehicleProperties(vehicle, props)
+function NGX.Game.SetVehicleProperties(vehicle, props)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
@@ -764,7 +765,7 @@ function ESX.Game.SetVehicleProperties(vehicle, props)
 	end
 end
 
-function ESX.Game.Utils.DrawText3D(coords, text, size, font)
+function NGX.Game.Utils.DrawText3D(coords, text, size, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 
 	local camCoords = GetFinalRenderedCamCoord()
@@ -789,13 +790,13 @@ function ESX.Game.Utils.DrawText3D(coords, text, size, font)
 	ClearDrawOrigin()
 end
 
-function ESX.ShowInventory()
-	local playerPed = ESX.PlayerData.ped
+function NGX.ShowInventory()
+	local playerPed = NGX.PlayerData.ped
 	local elements, currentWeight = {}, 0
 
-	for k,v in pairs(ESX.PlayerData.accounts) do
+	for k,v in pairs(NGX.PlayerData.accounts) do
 		if v.money > 0 then
-		local formattedMoney = _U('locale_currency', ESX.Math.GroupDigits(v.money))
+		local formattedMoney = _U('locale_currency', NGX.Math.GroupDigits(v.money))
 			local canDrop = v.name ~= 'bank'
 
 			table.insert(elements, {
@@ -810,7 +811,7 @@ function ESX.ShowInventory()
 		end
 	end
 
-	for k,v in ipairs(ESX.PlayerData.inventory) do
+	for k,v in ipairs(NGX.PlayerData.inventory) do
 		if v.count > 0 then
 			currentWeight = currentWeight + (v.weight * v.count)
 
@@ -852,15 +853,15 @@ function ESX.ShowInventory()
 		end
 	end
 
-	ESX.UI.Menu.CloseAll()
+	NGX.UI.Menu.CloseAll()
 
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory', {
-		title    = _U('inventory', currentWeight, ESX.PlayerData.maxWeight),
+	NGX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory', {
+		title    = _U('inventory', currentWeight, NGX.PlayerData.maxWeight),
 		align    = 'bottom-right',
 		elements = elements
 	}, function(data, menu)
 		menu.close()
-		local player, distance = ESX.Game.GetClosestPlayer()
+		local player, distance = NGX.Game.GetClosestPlayer()
 		elements = {}
 
 		if data.current.usable then
@@ -881,7 +882,7 @@ function ESX.ShowInventory()
 
 		table.insert(elements, {label = _U('return'), action = 'return'})
 
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory_item', {
+		NGX.UI.Menu.Open('default', GetCurrentResourceName(), 'inventory_item', {
 			title    = data.current.label,
 			align    = 'bottom-right',
 			elements = elements,
@@ -889,7 +890,7 @@ function ESX.ShowInventory()
 			local item, type = data1.current.value, data1.current.type
 
 			if data1.current.action == 'give' then
-				local playersNearby = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
+				local playersNearby = NGX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
 
 				if #playersNearby > 0 then
 					local players = {}
@@ -899,7 +900,7 @@ function ESX.ShowInventory()
 						players[GetPlayerServerId(playerNearby)] = true
 					end
 
-					ESX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
+					NGX.TriggerServerCallback('esx:getPlayerNames', function(returnedPlayers)
 						for playerId,playerName in pairs(returnedPlayers) do
 							table.insert(elements, {
 								label = playerName,
@@ -907,14 +908,14 @@ function ESX.ShowInventory()
 							})
 						end
 
-						ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_item_to', {
+						NGX.UI.Menu.Open('default', GetCurrentResourceName(), 'give_item_to', {
 							title    = _U('give_to'),
 							align    = 'bottom-right',
 							elements = elements
 						}, function(data2, menu2)
 							local selectedPlayer, selectedPlayerId = GetPlayerFromServerId(data2.current.playerId), data2.current.playerId
-							playersNearby = ESX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
-							playersNearby = ESX.Table.Set(playersNearby)
+							playersNearby = NGX.Game.GetPlayersInArea(GetEntityCoords(playerPed), 3.0)
+							playersNearby = NGX.Table.Set(playersNearby)
 
 							if playersNearby[selectedPlayer] then
 								local selectedPlayerPed = GetPlayerPed(selectedPlayer)
@@ -925,13 +926,13 @@ function ESX.ShowInventory()
 										menu2.close()
 										menu1.close()
 									else
-										ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
+										NGX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
 											title = _U('amount')
 										}, function(data3, menu3)
 											local quantity = tonumber(data3.value)
 
 											if quantity and quantity > 0 and data.current.count >= quantity then
-												TriggerServerEvent('esx:giveInventoryItem', selectedPlayerId, type, item, quantity)
+												TriggerServerEvent('NGX:giveInventoryItem', selectedPlayerId, type, item, quantity)
 												menu3.close()
 												menu2.close()
 												menu1.close()
@@ -943,10 +944,10 @@ function ESX.ShowInventory()
 										end)
 									end
 								else
-									ESX.ShowNotification(_U('in_vehicle'))
+									NGX.ShowNotification(_U('in_vehicle'))
 								end
 							else
-								ESX.ShowNotification(_U('players_nearby'))
+								NGX.ShowNotification(_U('players_nearby'))
 								menu2.close()
 							end
 						end, function(data2, menu2)
@@ -954,12 +955,12 @@ function ESX.ShowInventory()
 						end)
 					end, players)
 				else
-					ESX.ShowNotification(_U('players_nearby'))
+					NGX.ShowNotification(_U('players_nearby'))
 				end
 			elseif data1.current.action == 'remove' then
 				if IsPedOnFoot(playerPed) and not IsPedFalling(playerPed) then
 					local dict, anim = 'weapons@first_person@aim_rng@generic@projectile@sticky_bomb@', 'plant_floor'
-					ESX.Streaming.RequestAnimDict(dict)
+					NGX.Streaming.RequestAnimDict(dict)
 
 					if type == 'item_weapon' then
 						menu1.close()
@@ -967,7 +968,7 @@ function ESX.ShowInventory()
 						Wait(1000)
 						TriggerServerEvent('esx:removeInventoryItem', type, item)
 					else
-						ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
+						NGX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_remove', {
 							title = _U('amount')
 						}, function(data2, menu2)
 							local quantity = tonumber(data2.value)
@@ -979,7 +980,7 @@ function ESX.ShowInventory()
 								Wait(1000)
 								TriggerServerEvent('esx:removeInventoryItem', type, item, quantity)
 							else
-								ESX.ShowNotification(_U('amount_invalid'))
+								NGX.ShowNotification(_U('amount_invalid'))
 							end
 						end, function(data2, menu2)
 							menu2.close()
@@ -989,17 +990,17 @@ function ESX.ShowInventory()
 			elseif data1.current.action == 'use' then
 				TriggerServerEvent('esx:useItem', item)
 			elseif data1.current.action == 'return' then
-				ESX.UI.Menu.CloseAll()
-				ESX.ShowInventory()
+				NGX.UI.Menu.CloseAll()
+				NGX.ShowInventory()
 			elseif data1.current.action == 'give_ammo' then
-				local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+				local closestPlayer, closestDistance = NGX.Game.GetClosestPlayer()
 				local closestPed = GetPlayerPed(closestPlayer)
 				local pedAmmo = GetAmmoInPedWeapon(playerPed, GetHashKey(item))
 
 				if IsPedOnFoot(closestPed) and not IsPedFalling(closestPed) then
 					if closestPlayer ~= -1 and closestDistance < 3.0 then
 						if pedAmmo > 0 then
-							ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
+							NGX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'inventory_item_count_give', {
 								title = _U('amountammo')
 							}, function(data2, menu2)
 								local quantity = tonumber(data2.value)
@@ -1010,27 +1011,27 @@ function ESX.ShowInventory()
 										menu2.close()
 										menu1.close()
 									else
-										ESX.ShowNotification(_U('noammo'))
+										NGX.ShowNotification(_U('noammo'))
 									end
 								else
-									ESX.ShowNotification(_U('amount_invalid'))
+									NGX.ShowNotification(_U('amount_invalid'))
 								end
 							end, function(data2, menu2)
 								menu2.close()
 							end)
 						else
-							ESX.ShowNotification(_U('noammo'))
+							NGX.ShowNotification(_U('noammo'))
 						end
 					else
-						ESX.ShowNotification(_U('players_nearby'))
+						NGX.ShowNotification(_U('players_nearby'))
 					end
 				else
-					ESX.ShowNotification(_U('in_vehicle'))
+					NGX.ShowNotification(_U('in_vehicle'))
 				end
 			end
 		end, function(data1, menu1)
-			ESX.UI.Menu.CloseAll()
-			ESX.ShowInventory()
+			NGX.UI.Menu.CloseAll()
+			NGX.ShowInventory()
 		end)
 	end, function(data, menu)
 		menu.close()
@@ -1038,17 +1039,17 @@ function ESX.ShowInventory()
 end
 
 RegisterNetEvent('esx:showNotification', function(msg)
-	ESX.ShowNotification(msg)
+	NGX.ShowNotification(msg)
 end)
 
 RegisterNetEvent('esx:showAdvancedNotification')
 AddEventHandler('esx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-	ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+	NGX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 end)
 
 RegisterNetEvent('esx:showHelpNotification')
 AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, duration)
-	ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
+	NGX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 
 -- SetTimeout

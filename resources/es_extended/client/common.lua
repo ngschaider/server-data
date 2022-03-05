@@ -1,7 +1,7 @@
-AddEventHandler('esx:getSharedObject', function(cb)
-	cb(ESX)
+AddEventHandler("ngx:getSharedObject", function(cb)
+	cb(NGX);
 end)
 
-exports('getSharedObject', function()
-	return ESX
+exports("getSharedObject", function()
+	return NGX;
 end)

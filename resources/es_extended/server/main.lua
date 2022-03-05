@@ -1,29 +1,29 @@
 SetMapName('San Andreas')
 SetGameType('NGX')
 
-ESX = {};
-ESX.Players = {};
+NGX = {};
+NGX.Players = {};
 
 RegisterNetEvent('ngx:OnPlayerJoined', function()
 	local clientId = source;
-	ESX.Players[clientId] = ConstructPlayer(clientId);
+	NGX.Players[clientId] = ConstructPlayer(clientId);
 end)
 
 RegisterNetEvent("ngx:OnCharacterSwitched", function(clientId, characterId)
 	if characterId then
-		ESX.Players[player].character = ConstructCharacter(clientId, characterId);
+		NGX.Players[player].character = ConstructCharacter(clientId, characterId);
 	else
-		ESX.Players[player].character = nil;
+		NGX.Players[player].character = nil;
 	end
 end);
 
 AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	deferrals.defer()
 	local clientId = source;
-	local identifier = ESX.GetIdentifier(playerId);
+	local identifier = NGX.GetIdentifier(playerId);
 
 	if identifier then
-		if ESX.GetPlayerFromIdentifier(identifier) then
+		if NGX.GetPlayerFromIdentifier(identifier) then
 			deferrals.done(('There was an error loading your character!\nError code: identifier-active\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same account.\n\nYour identifier: %s'):format(identifier))
 		else
 			deferrals.done()
@@ -33,12 +33,12 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	end
 end)
 
-ESX.RegisterServerCallback("ngx:GetPlayerData", function(clientId, cb, key, ...)
-	local player = ESX.GetPlayerFromId(clientId);
+NGX.RegisterServerCallback("ngx:GetPlayerData", function(clientId, cb, key, ...)
+	local player = NGX.GetPlayerFromId(clientId);
 	
 	local whitelist = {"characters"};
 
-	if not ESX.Table.Contains(whitelist, key) then
+	if not NGX.Table.Contains(whitelist, key) then
 		return;
 	end
 
@@ -48,8 +48,8 @@ ESX.RegisterServerCallback("ngx:GetPlayerData", function(clientId, cb, key, ...)
 	cb(player[functionName](...));
 end);
 
-ESX.RegisterServerCallback("ngx:GetCharacterData", function(clientId, cb, key, ...)
-	local player = ESX.GetPlayerFromId(clientId);
+NGX.RegisterServerCallback("ngx:GetCharacterData", function(clientId, cb, key, ...)
+	local player = NGX.GetPlayerFromId(clientId);
 
 	if not player.character then 
 		cb(nil);
@@ -58,7 +58,7 @@ ESX.RegisterServerCallback("ngx:GetCharacterData", function(clientId, cb, key, .
 
 	local whitelist = {"job", "name", "account", "accounts"};
 
-	if not ESX.Table.Contains(whitelist, key) then
+	if not NGX.Table.Contains(whitelist, key) then
 		return;
 	end
 
