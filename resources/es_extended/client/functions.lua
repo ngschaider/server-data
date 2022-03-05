@@ -556,13 +556,11 @@ RegisterNetEvent('ngx:showNotification', function(msg)
 	NGX.ShowNotification(msg)
 end)
 
-RegisterNetEvent('ngx:showAdvancedNotification')
-AddEventHandler('ngx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+RegisterNetEvent('ngx:showAdvancedNotification', function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 	NGX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
 end)
 
-RegisterNetEvent('ngx:showHelpNotification')
-AddEventHandler('ngx:showHelpNotification', function(msg, thisFrame, beep, duration)
+RegisterNetEvent('ngx:showHelpNotification', function(msg, thisFrame, beep, duration)
 	NGX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 
