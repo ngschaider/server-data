@@ -1,110 +1,55 @@
 local utils = M("utils");
+local user = M("user");
 
-module.new = function(clientId, characterId)
+local CreatePlayer = function(userId, firstname, lastname, dateofbirth, height)
+	local characterId = MySQL.insert.await("INSERT INTO characters (user_id, firstname, lastname, dateofbirth, height) VALUES (?, ?, ?, ?, ?)", {
+		userId, firstname, lastname, dateofbirth, height
+	});
+
+	return characterId;
+end;
+
+local ConstructCharacter = function(characterId)
+	local results = MySQL.prepare.await("SELECT user_id, firstname, lastname, dateofbirth, height FROM characters WHERE id=?", {characterId});
+
 	local self = {};
 
-	self.id = characterId;
-	self.player = NGX.GetPlayerFromId(clientId);
+	self.id = results[1].id;
+	self.user = user.GetByPlayerId(results[1].user_id);
 
-	self.setPosition = function(coords)
-		self.triggerEvent('ngx:teleport', coords);
-	end
+	self.SetPosition = function(coords)
+		self.user.TriggerEvent('ngx:teleport', coords);
+	end;
 
-	self.getPosition = function(vector)
+	self.GetPosition = function(vector)
 		local ped = GetPlayerPed(self.player.id);
 		return GetEntityCoords(ped);
-	end
-
-	self.kick = function(reason)
-		DropPlayer(self.source, reason);
-	end
-
-	self.setMoney = function(money)
-		money = NGX.Math.Round(money);
-		self.setAccountMoney('money', money);
-	end
-
-	self.getMoney = function()
-		return self.getAccount('money').money;
-	end
-
-	self.addMoney = function(money)
-		money = NGX.Math.Round(money);
-		self.addAccountMoney('money', money);
-	end
-
-	self.removeMoney = function(money)
-		money = NGX.Math.Round(money);
-		self.removeAccountMoney('money', money);
-	end
-
-	self.getAccounts = function(minimal)
-		local accounts = MySQL.prepare.await("SELECT name, value, label FROM accounts WHERE owner=? AND owner_type='character'", {self.characterId});
-		
-		if minimal then
-			local minimalAccounts = {}
-
-			for k,v in ipairs(accounts) do
-				minimalAccounts[v.name] = v.value;
-			end
-
-			return minimalAccounts;
-		else
-			return accounts;
-		end
-	end
-
-	self.getAccount = function(accountName)
-		local account = MySQL.prepare.await("SELECT name, value, label FROM accounts WHERE owner=? AND owner_type='character' AND name=?", {self.characterId, accountName});
-		
-		if #account > 0 then
-			return account[1];
-		else
-			return nil;
-		end
-	end
-
-	self.getJob = function()
-		local query = "SELECT j.name job_name, j.label job_label, g.name grade_name, g.label grade_label, g.salary grade_salary FROM job_grades g INNER JOIN jobs j ON j.name = g.job AND g.name = u.job_grade INNER JOIN character c ON c.job = j.job WHERE c.id =?";
-		local results = MySQL.prepare.await(query, {self.characterId});
-		local r = results[1];
-		
-		return {
-			name = r.job_name,
-			label = r.job_label,
-			grade_name = r.grade_name,
-			grade_label = r.grade_label,
-			grade_salary = r.grade_salary,
-		};
-	end
+	end;
 	
-	self.getName = function()
-		local result = MySQL.prepare.await("SELECT firstname, lastname FROM characters WHERE id=?", {self.characterId});
-		return result[1].firstname .. " " .. result[1].lastname;
-	end
+	self.GetName = function()
+		local results = MySQL.prepare.await("SELECT firstname, lastname FROM characters WHERE id=?", {self.id});
+		return results[1].firstname .. " " .. results[1].lastname;
+	end;
 
-	self.setName = function(firstname, lastname)
-		MySQL.prepare.await("UPDATE characters SET firstname=?, lastname=? WHERE id=?", {self.characterId});
-	end
-
-	self.setAccountMoney = function(accountName, value)
-		MySQL.prepare("UPDATE accounts SET value=? WHERE owner_type='character' AND owner=? AND name=?", {value, self.characterId, accountName});
-	end
-
-	self.addAccountMoney = function(accountName, money)
-		MySQL.prepare("UPDATE accounts SET value=value + ? WHERE owner_type='character' AND owner=? AND name=?", {value, self.characterId, accountName});
-	end
-
-	self.removeAccountMoney = function(accountName, money)
-		MySQL.prepare("UPDATE accounts SET value=value - ? WHERE owner_type='character' AND owner=? AND name=?", {value, self.characterId, accountName});
-	end
-
-	self.setJob = function(job, grade)
-		if not NGX.DoesJobExist(job, grade) then
-			return;
-		end
-		MySQL.prepare.await("UPDATE characters SET job=?, job_grade=? WHERE id=?", {job, grade, self.characterId});
-	end
-
-	return self
+	return self;
 end
+
+callbacks.RegisterServerCallback("ngx:GetCharacterData", function(clientId, cb, key, ...)
+	local player = NGX.GetPlayerFromId(clientId);
+
+	if not player.character then
+		cb(nil);
+		return;
+	end
+
+	local whitelist = {"job", "name", "account", "accounts"};
+
+	if not utils.table.Contains(whitelist, key) then
+		return;
+	end
+
+	-- concatenate "get" and `key` with the first letter uppercased
+	local functionName = "get" .. key:gsub("^%l", string.upper);
+
+	cb(player.character[functionName](...));
+end);

@@ -2,13 +2,13 @@ NGX = NGX or {};
 NGX.Logger = NGX.Logger or {};
 
 NGX.Logger.Error = function(err, loc)
-    loc = loc or "<unknown location";
+    loc = loc or "<unknown location>";
     print(debug.traceback("^1[error] in ^5" .. loc .. "^7\n\n^5message: ^1" .. err .. "^7\n"));
-end
+end;
 
 NGX.Logger.Warn = function(warningMessage)
     print('^3[warning]^7 ' .. warningMessage)
-end
+end;
 
 NGX.EvalFile = function(resource, file, env)
     local code = LoadResourceFile(resource, file);
@@ -27,10 +27,9 @@ NGX.EvalFile = function(resource, file, env)
     end);
 
     return env, success;
-end
+end;
 
-
-local modules = json.decode(LoadResourceFile(GetCurrentResourceName(), "config/modules.json"));
+local modules = json.decode(LoadResourceFile(GetCurrentResourceName(), "modules.json"));
 for k,v in pairs(modules) do
     M(v);
 end

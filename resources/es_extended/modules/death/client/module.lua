@@ -41,8 +41,16 @@ PlayerKilledByPlayer = function(killerServerId, killerClientId, deathCause)
 	local distance = #(victimCoords - killerCoords)
 
 	local data = {
-		victimCoords = {x = NGX.Math.Round(victimCoords.x, 1), y = NGX.Math.Round(victimCoords.y, 1), z = NGX.Math.Round(victimCoords.z, 1)},
-		killerCoords = {x = NGX.Math.Round(killerCoords.x, 1), y = NGX.Math.Round(killerCoords.y, 1), z = NGX.Math.Round(killerCoords.z, 1)},
+		victimCoords = {
+			x = utils.math.Round(victimCoords.x, 1), 
+			y = utils.math.Round(victimCoords.y, 1), 
+			z = utils.math.Round(victimCoords.z, 1)
+		};
+		killerCoords = {
+			x = utils.math.Round(killerCoords.x, 1), 
+			y = utils.math.Round(killerCoords.y, 1), 
+			z = utils.math.Round(killerCoords.z, 1)
+		};
 
 		killedByPlayer = true,
 		deathCause = deathCause,

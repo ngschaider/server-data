@@ -1,13 +1,10 @@
-NGX = NGX or {};
-NGX.Modules = NGX.Modules or {};
-NGX.Modules.LoadedModules = {};
-
+local loadedModules = {};
 local resourceName = GetCurrentResourceName();
 
 local GetEntryPoints = function(moduleName)
     local sides = {
         "shared",
-    }
+    };
 
     if IsDuplicityVersion() then
         table.insert(sides, "server");
@@ -53,9 +50,9 @@ local CreateModuleEnv = function(moduleName)
     return env;
 end;
 
-local LoadModule = function(moduleName)
-    if NGX.Modules.LoadedModules[moduleName] then
-        return NGX.Modules.LoadedModules[moduleName];
+M = function(moduleName)
+    if loadedModules[moduleName] then
+        return loadedModules[moduleName];
     end
 
     local moduleEnv = CreateModuleEnv(moduleName);
@@ -70,13 +67,11 @@ local LoadModule = function(moduleName)
     end
 
     if success then
-        NGX.Modules.LoadedModules[moduleName] = moduleEnv.module;
-        return moduleEnv.module;
+        loadedModules[moduleName] = moduleEnv.module;
+        return loadedModules[moduleName];
     else
         NGX.Logger.Error('module [' .. moduleName .. '] does not exist', '@' .. resourceName .. ':boot/sh_modules.lua');
     end
 
     return nil;
 end;
-
-M = LoadModule;

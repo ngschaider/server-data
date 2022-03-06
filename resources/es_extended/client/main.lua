@@ -1,3 +1,5 @@
+local game = M("game");
+
 Citizen.CreateThread(function()
 	while true do
 		InvalidateIdleCam()
@@ -44,7 +46,7 @@ AddEventHandler('playerSpawned', onPlayerSpawn)
 AddEventHandler('ngx:onPlayerSpawn', onPlayerSpawn)
 
 RegisterNetEvent('ngx:teleport', function(coords)
-	NGX.Game.Teleport(PlayerPedId(), coords)
+	game.Teleport(PlayerPedId(), coords)
 end)
 
 RegisterNetEvent('ngx:spawnVehicle', function(vehicle)
@@ -58,7 +60,7 @@ RegisterNetEvent('ngx:spawnVehicle', function(vehicle)
 				local playerCoords = GetEntityCoords(ped);
 				local playerHeading = GetEntityHeading(ped);
 
-				NGX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
+				game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
 					TaskWarpPedIntoVehicle(ped, vehicle, -1)
 				end)
 			else

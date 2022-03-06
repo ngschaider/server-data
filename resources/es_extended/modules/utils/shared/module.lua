@@ -12,4 +12,4 @@ module.GetRandomString = function(length)
 	else
 		return '';
 	end
-end
+end;

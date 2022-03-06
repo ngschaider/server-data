@@ -116,11 +116,11 @@ end
 
 module.GetPeds = function(onlyOtherPeds)
 	local peds = {};
-	local myPed = NGX.Character.getPed(),
+	local ped = PlayerPedId(),
 	local pool = GetGamePool("CPed");
 
 	for k,v in pairs(pool) do
-		if not onlyOtherPeds or (onlyOtherPeds and v ~= myPed) then
+		if not onlyOtherPeds or v ~= ped then
 			table.insert(peds, v);
 		end
 	end
@@ -170,10 +170,10 @@ local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coord
 	local nearbyEntities = {}
 
 	if coords then
-		coords = vector3(coords.x, coords.y, coords.z)
+		coords = vector3(coords.x, coords.y, coords.z);
 	else
-		local playerPed = NGX.Character.getPed();
-		coords = GetEntityCoords(playerPed)
+		local ped = PlayerPedId();
+		coords = GetEntityCoords(ped);
 	end
 
 	for k,entity in pairs(entities) do
@@ -205,8 +205,8 @@ module.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFilt
 	if coords then
 		coords = vector3(coords.x, coords.y, coords.z)
 	else
-		local playerPed = NGX.Character.getPed();
-		coords = GetEntityCoords(playerPed)
+		local ped = PlayerPedId();
+		coords = GetEntityCoords(ped);
 	end
 
 	if modelFilter then
@@ -231,10 +231,10 @@ module.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFilt
 end
 
 module.GetVehicleInDirection = function()
-	local playerPed    = NGX.Character.getPed();
-	local playerCoords = GetEntityCoords(playerPed)
-	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
-	local rayHandle    = StartExpensiveSynchronousShapeTestLosProbe(playerCoords, inDirection, 10, playerPed, 0)
+	local ped = PlayerPedId();
+	local playerCoords = GetEntityCoords(ped)
+	local inDirection  = GetOffsetFromEntityInWorldCoords(ped, 0.0, 5.0, 0.0)
+	local rayHandle    = StartExpensiveSynchronousShapeTestLosProbe(playerCoords, inDirection, 10, ped, 0)
 	local numRayHandle, hit, endCoords, surfaceNormal, entityHit = GetShapeTestResult(rayHandle)
 
 	if hit == 1 and GetEntityType(entityHit) == 2 then

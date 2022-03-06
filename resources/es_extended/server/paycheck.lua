@@ -22,7 +22,7 @@ local Payout = function()
 			end
 		end
 	end
-end
+end;
 
 StartPayCheck = function()
 	CreateThread(function()
@@ -31,4 +31,4 @@ StartPayCheck = function()
 			Payout();
 		end
 	end)
-end
+end;

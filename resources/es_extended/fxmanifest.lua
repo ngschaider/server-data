@@ -26,7 +26,6 @@ ui_page {
 
 files {
 	"modules.json",
-	'locale.js',
 }
 
 dependencies {

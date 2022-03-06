@@ -41,8 +41,8 @@ NGX.RegisterServerCallback("ngx:GetPlayerData", function(clientId, cb, key, ...)
 		return;
 	end
 
-	-- concatenate "get" and `key` with the first letter uppercased
-	local functionName = "get" .. key:gsub("^%l", string.upper);
+	-- concatenate "Get" and `key` with the first letter uppercased
+	local functionName = "Get" .. key:gsub("^%l", string.upper);
 
 	cb(player[functionName](...));
 end);

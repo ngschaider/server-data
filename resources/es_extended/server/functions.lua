@@ -169,7 +169,7 @@ NGX.GetJobs = function()
 	end
 
 	return res;
-end
+end;
 
 NGX.DoesJobExist = function(job, grade)
 	grade = tostring(grade)
