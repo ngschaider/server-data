@@ -1,8 +1,5 @@
-NGX = NGX or {};
-NGX.Scaleform = NGX.Scaleform or {};
-
-NGX.Scaleform.ShowFreemodeMessage = function(title, msg, sec)
-	local scaleform = NGX.Scaleform.RequestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
+module.ShowFreemodeMessage = function(title, msg, sec)
+	local scaleform = module.RequestScaleformMovie('MP_BIG_MESSAGE_FREEMODE')
 
 	BeginScaleformMovieMethod(scaleform, 'SHOW_SHARD_WASTED_MP_MESSAGE')
 	ScaleformMovieMethodAddParamTextureNameString(title)
@@ -19,8 +16,8 @@ NGX.Scaleform.ShowFreemodeMessage = function(title, msg, sec)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
-NGX.Scaleform.ShowBreakingNews = function(title, msg, bottom, sec)
-	local scaleform = NGX.Scaleform.RequestScaleformMovie('BREAKING_NEWS')
+module.ShowBreakingNews = function(title, msg, bottom, sec)
+	local scaleform = module.RequestScaleformMovie('BREAKING_NEWS')
 
 	BeginScaleformMovieMethod(scaleform, 'SET_TEXT')
 	ScaleformMovieMethodAddParamTextureNameString(msg)
@@ -50,8 +47,8 @@ NGX.Scaleform.ShowBreakingNews = function(title, msg, bottom, sec)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
-NGX.Scaleform.ShowPopupWarning = function(title, msg, bottom, sec)
-	local scaleform = NGX.Scaleform.RequestScaleformMovie('POPUP_WARNING')
+module.ShowPopupWarning = function(title, msg, bottom, sec)
+	local scaleform = module.RequestScaleformMovie('POPUP_WARNING')
 
 	BeginScaleformMovieMethod(scaleform, 'SHOW_POPUP_WARNING')
 
@@ -73,8 +70,8 @@ NGX.Scaleform.ShowPopupWarning = function(title, msg, bottom, sec)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
-NGX.Scaleform.ShowTrafficMovie = function(sec)
-	local scaleform = NGX.Scaleform.RequestScaleformMovie('TRAFFIC_CAM')
+module.ShowTrafficMovie = function(sec)
+	local scaleform = module.RequestScaleformMovie('TRAFFIC_CAM')
 
 	BeginScaleformMovieMethod(scaleform, 'PLAY_CAM_MOVIE')
 
@@ -90,7 +87,7 @@ NGX.Scaleform.ShowTrafficMovie = function(sec)
 	SetScaleformMovieAsNoLongerNeeded(scaleform)
 end
 
-NGX.Scaleform.RequestScaleformMovie = function(movie)
+module.RequestScaleformMovie = function(movie)
 	local scaleform = RequestScaleformMovie(movie)
 
 	while not HasScaleformMovieLoaded(scaleform) do
