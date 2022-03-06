@@ -28,7 +28,7 @@ module.table.IndexOf = function(t, value)
 end
 
 module.table.Contains = function(t, value)
-	return NGX.Table.IndexOf(t, value) ~= -1;
+	return module.IndexOf(t, value) ~= -1;
 end
 
 module.table.ContainsKey = function(t, value)
@@ -111,7 +111,7 @@ module.table.Clone = function(t)
 
 	for k,v in pairs(t) do
 		if type(v) == 'table' then
-			target[k] = NGX.Table.Clone(v)
+			target[k] = module.Clone(v)
 		else
 			target[k] = v
 		end
@@ -122,29 +122,35 @@ module.table.Clone = function(t)
 	return target
 end
 
+-- create a new table with values of t1 and t2
+-- keys are lost in the process
 module.table.Concat = function(t1, t2)
-	local t3 = NGX.Table.Clone(t1)
+	local res = {};
 
-	for i=1, #t2, 1 do
-		table.insert(t3, t2[i])
+	for k,v in pairs(t1) do
+		table.insert(res, v);
 	end
 
-	return t3
+	for k,v in pairs(t2) do
+		table.insert(res, v)
+	end
+
+	return res;
 end
 
 module.table.Join = function(t, sep)
-	local sep = sep or ','
-	local str = ''
+	local sep = sep or ',';
+	local res = '';
 
 	for i=1, #t, 1 do
 		if i > 1 then
-			str = str .. sep
+			res = res .. sep;
 		end
 
-		str = str .. t[i]
+		res = res .. t[i];
 	end
 
-	return str
+	return res;
 end
 
 -- Credit: https://stackoverflow.com/a/15706820

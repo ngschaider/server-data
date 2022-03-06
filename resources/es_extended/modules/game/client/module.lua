@@ -1,3 +1,7 @@
+local streaming = M("streaming");
+local utils = M("utils");
+local game = M("game");
+
 module.GetPedMugshot = function(ped, transparent)
 	if DoesEntityExist(ped) then
 		local mugshot
@@ -42,7 +46,7 @@ module.SpawnObject = function(object, coords, cb, networked)
 	networked = networked == nil and true or networked
 
 	CreateThread(function()
-		NGX.Streaming.RequestModel(model)
+		streaming.RequestModel(model)
 
 		local obj = CreateObject(model, vector.xyz, networked, false, true)
 		if cb then
@@ -52,7 +56,7 @@ module.SpawnObject = function(object, coords, cb, networked)
 end
 
 module.SpawnLocalObject = function(object, coords, cb)
-	NGX.Game.SpawnObject(object, coords, cb, false)
+	game.SpawnObject(object, coords, cb, false)
 end
 
 module.DeleteVehicle = function(vehicle)
@@ -70,7 +74,7 @@ module.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
 	CreateThread(function()
-		NGX.Streaming.RequestModel(model)
+		streaming.RequestModel(model)
 
 		local vehicle = CreateVehicle(model, vector.xyz, heading, networked, false)
 
@@ -255,87 +259,87 @@ module.GetVehicleProperties = function(vehicle)
 		end
 
 		return {
-			model             = GetEntityModel(vehicle),
+			model = GetEntityModel(vehicle),
 
-			plate             = NGX.Math.Trim(GetVehicleNumberPlateText(vehicle)),
-			plateIndex        = GetVehicleNumberPlateTextIndex(vehicle),
+			plate = utils.math.Trim(GetVehicleNumberPlateText(vehicle)),
+			plateIndex = GetVehicleNumberPlateTextIndex(vehicle),
 
-			bodyHealth        = NGX.Math.Round(GetVehicleBodyHealth(vehicle), 1),
-			engineHealth      = NGX.Math.Round(GetVehicleEngineHealth(vehicle), 1),
-			tankHealth        = NGX.Math.Round(GetVehiclePetrolTankHealth(vehicle), 1),
+			bodyHealth = utils.math.Round(GetVehicleBodyHealth(vehicle), 1),
+			engineHealth = utils.math.Round(GetVehicleEngineHealth(vehicle), 1),
+			tankHealth = utils.math.Round(GetVehiclePetrolTankHealth(vehicle), 1),
 
-			fuelLevel         = NGX.Math.Round(GetVehicleFuelLevel(vehicle), 1),
-			dirtLevel         = NGX.Math.Round(GetVehicleDirtLevel(vehicle), 1),
-			color1            = colorPrimary,
-			color2            = colorSecondary,
+			fuelLevel = utils.math.Round(GetVehicleFuelLevel(vehicle), 1),
+			dirtLevel = utils.math.Round(GetVehicleDirtLevel(vehicle), 1),
+			color1 = colorPrimary,
+			color2 = colorSecondary,
 
-			pearlescentColor  = pearlescentColor,
-			wheelColor        = wheelColor,
+			pearlescentColor = pearlescentColor,
+			wheelColor = wheelColor,
 
-			wheels            = GetVehicleWheelType(vehicle),
-			windowTint        = GetVehicleWindowTint(vehicle),
-			xenonColor        = GetVehicleXenonLightsColor(vehicle),
+			wheels = GetVehicleWheelType(vehicle),
+			windowTint = GetVehicleWindowTint(vehicle),
+			xenonColor = GetVehicleXenonLightsColor(vehicle),
 
-			neonEnabled       = {
+			neonEnabled = {
 				IsVehicleNeonLightEnabled(vehicle, 0),
 				IsVehicleNeonLightEnabled(vehicle, 1),
 				IsVehicleNeonLightEnabled(vehicle, 2),
 				IsVehicleNeonLightEnabled(vehicle, 3)
 			},
 
-			neonColor         = table.pack(GetVehicleNeonLightsColour(vehicle)),
-			extras            = extras,
-			tyreSmokeColor    = table.pack(GetVehicleTyreSmokeColor(vehicle)),
+			neonColor = table.pack(GetVehicleNeonLightsColour(vehicle)),
+			extras = extras,
+			tyreSmokeColor = table.pack(GetVehicleTyreSmokeColor(vehicle)),
 
-			modSpoilers       = GetVehicleMod(vehicle, 0),
-			modFrontBumper    = GetVehicleMod(vehicle, 1),
-			modRearBumper     = GetVehicleMod(vehicle, 2),
-			modSideSkirt      = GetVehicleMod(vehicle, 3),
-			modExhaust        = GetVehicleMod(vehicle, 4),
-			modFrame          = GetVehicleMod(vehicle, 5),
-			modGrille         = GetVehicleMod(vehicle, 6),
-			modHood           = GetVehicleMod(vehicle, 7),
-			modFender         = GetVehicleMod(vehicle, 8),
-			modRightFender    = GetVehicleMod(vehicle, 9),
-			modRoof           = GetVehicleMod(vehicle, 10),
+			modSpoilers = GetVehicleMod(vehicle, 0),
+			modFrontBumper = GetVehicleMod(vehicle, 1),
+			modRearBumper = GetVehicleMod(vehicle, 2),
+			modSideSkirt = GetVehicleMod(vehicle, 3),
+			modExhaust = GetVehicleMod(vehicle, 4),
+			modFrame = GetVehicleMod(vehicle, 5),
+			modGrille = GetVehicleMod(vehicle, 6),
+			modHood = GetVehicleMod(vehicle, 7),
+			modFender = GetVehicleMod(vehicle, 8),
+			modRightFender = GetVehicleMod(vehicle, 9),
+			modRoof = GetVehicleMod(vehicle, 10),
 
-			modEngine         = GetVehicleMod(vehicle, 11),
-			modBrakes         = GetVehicleMod(vehicle, 12),
-			modTransmission   = GetVehicleMod(vehicle, 13),
-			modHorns          = GetVehicleMod(vehicle, 14),
-			modSuspension     = GetVehicleMod(vehicle, 15),
-			modArmor          = GetVehicleMod(vehicle, 16),
+			modEngine = GetVehicleMod(vehicle, 11),
+			modBrakes = GetVehicleMod(vehicle, 12),
+			modTransmission = GetVehicleMod(vehicle, 13),
+			modHorns = GetVehicleMod(vehicle, 14),
+			modSuspension = GetVehicleMod(vehicle, 15),
+			modArmor = GetVehicleMod(vehicle, 16),
 
-			modTurbo          = IsToggleModOn(vehicle, 18),
-			modSmokeEnabled   = IsToggleModOn(vehicle, 20),
-			modXenon          = IsToggleModOn(vehicle, 22),
+			modTurbo = IsToggleModOn(vehicle, 18),
+			modSmokeEnabled = IsToggleModOn(vehicle, 20),
+			modXenon = IsToggleModOn(vehicle, 22),
 
-			modFrontWheels    = GetVehicleMod(vehicle, 23),
-			modBackWheels     = GetVehicleMod(vehicle, 24),
+			modFrontWheels = GetVehicleMod(vehicle, 23),
+			modBackWheels = GetVehicleMod(vehicle, 24),
 
-			modPlateHolder    = GetVehicleMod(vehicle, 25),
-			modVanityPlate    = GetVehicleMod(vehicle, 26),
-			modTrimA          = GetVehicleMod(vehicle, 27),
-			modOrnaments      = GetVehicleMod(vehicle, 28),
-			modDashboard      = GetVehicleMod(vehicle, 29),
-			modDial           = GetVehicleMod(vehicle, 30),
-			modDoorSpeaker    = GetVehicleMod(vehicle, 31),
-			modSeats          = GetVehicleMod(vehicle, 32),
-			modSteeringWheel  = GetVehicleMod(vehicle, 33),
+			modPlateHolder = GetVehicleMod(vehicle, 25),
+			modVanityPlate = GetVehicleMod(vehicle, 26),
+			modTrimA = GetVehicleMod(vehicle, 27),
+			modOrnaments = GetVehicleMod(vehicle, 28),
+			modDashboard = GetVehicleMod(vehicle, 29),
+			modDial = GetVehicleMod(vehicle, 30),
+			modDoorSpeaker = GetVehicleMod(vehicle, 31),
+			modSeats = GetVehicleMod(vehicle, 32),
+			modSteeringWheel = GetVehicleMod(vehicle, 33),
 			modShifterLeavers = GetVehicleMod(vehicle, 34),
-			modAPlate         = GetVehicleMod(vehicle, 35),
-			modSpeakers       = GetVehicleMod(vehicle, 36),
-			modTrunk          = GetVehicleMod(vehicle, 37),
-			modHydrolic       = GetVehicleMod(vehicle, 38),
-			modEngineBlock    = GetVehicleMod(vehicle, 39),
-			modAirFilter      = GetVehicleMod(vehicle, 40),
-			modStruts         = GetVehicleMod(vehicle, 41),
-			modArchCover      = GetVehicleMod(vehicle, 42),
-			modAerials        = GetVehicleMod(vehicle, 43),
-			modTrimB          = GetVehicleMod(vehicle, 44),
-			modTank           = GetVehicleMod(vehicle, 45),
-			modWindows        = GetVehicleMod(vehicle, 46),
-			modLivery         = GetVehicleLivery(vehicle)
+			modAPlate = GetVehicleMod(vehicle, 35),
+			modSpeakers = GetVehicleMod(vehicle, 36),
+			modTrunk = GetVehicleMod(vehicle, 37),
+			modHydrolic = GetVehicleMod(vehicle, 38),
+			modEngineBlock = GetVehicleMod(vehicle, 39),
+			modAirFilter = GetVehicleMod(vehicle, 40),
+			modStruts = GetVehicleMod(vehicle, 41),
+			modArchCover = GetVehicleMod(vehicle, 42),
+			modAerials = GetVehicleMod(vehicle, 43),
+			modTrimB = GetVehicleMod(vehicle, 44),
+			modTank = GetVehicleMod(vehicle, 45),
+			modWindows = GetVehicleMod(vehicle, 46),
+			modLivery = GetVehicleLivery(vehicle)
 		}
 	else
 		return

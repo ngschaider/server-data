@@ -1,3 +1,5 @@
+local utils = M("utils");
+
 CreateThread(function()
 	local isDead = false
 
@@ -44,7 +46,7 @@ PlayerKilledByPlayer = function(killerServerId, killerClientId, deathCause)
 
 		killedByPlayer = true,
 		deathCause = deathCause,
-		distance = NGX.Math.Round(distance, 1),
+		distance = utils.math.Round(distance, 1),
 
 		killerServerId = killerServerId,
 		killerClientId = killerClientId
@@ -59,7 +61,11 @@ PlayerKilled = function(deathCause)
 	local victimCoords = GetEntityCoords(playerPed)
 
 	local data = {
-		victimCoords = {x = NGX.Math.Round(victimCoords.x, 1), y = NGX.Math.Round(victimCoords.y, 1), z = NGX.Math.Round(victimCoords.z, 1)},
+		victimCoords = {
+			x = utils.math.Round(victimCoords.x, 1), 
+			y = utils.math.Round(victimCoords.y, 1), 
+			z = utils.math.Round(victimCoords.z, 1),
+		};
 
 		killedByPlayer = false,
 		deathCause = deathCause

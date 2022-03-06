@@ -1,3 +1,5 @@
+local utils = M("utils");
+
 module.new = function(clientId, characterId)
 	local self = {};
 
