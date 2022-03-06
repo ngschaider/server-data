@@ -1,7 +1,7 @@
 local pool = NativeUI.CreatePool();
 
 RegisterNetEvent("ngx:OnPlayerJoined", function()
-	--print("ngx:OnPlayerJoined");
+	print("ngx:OnPlayerJoined");
 	
 	local player = PlayerId();
 

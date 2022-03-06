@@ -1,11 +1,11 @@
 -- Disable default idle camera
 Citizen.CreateThread(function()
 	while true do
-		InvalidateIdleCam()
-		InvalidateVehicleIdleCam()
+		InvalidateIdleCam();
+		InvalidateVehicleIdleCam();
 		Wait(15000);
 	end
-end)
+end);
 
 Citizen.CreateThread(function()
     while true do
@@ -14,6 +14,10 @@ Citizen.CreateThread(function()
 			TriggerEvent("ngx:OnPlayerJoined");
 			return;
 		end
-		Citizen.Wait(100)
+		Citizen.Wait(100);
     end
-end)
+end);
+
+-- disable wanted level
+ClearPlayerWantedLevel(PlayerId());
+SetMaxWantedLevel(0);
