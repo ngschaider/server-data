@@ -23,7 +23,7 @@ NGX.EvalFile = function(resource, file, env)
 
     local status, result = xpcall(fn, function(err)
         success = false;
-        ESX.LogError(err, '@' .. resource .. ':' .. file);
+        NGX.Logger.Error(err, '@' .. resource .. ':' .. file);
     end);
 
     return env, success;

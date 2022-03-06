@@ -1,19 +1,3 @@
-local Charset = {}
-
-for i = 48,  57 do table.insert(Charset, string.char(i)) end
-for i = 65,  90 do table.insert(Charset, string.char(i)) end
-for i = 97, 122 do table.insert(Charset, string.char(i)) end
-
-NGX.GetRandomString = function(length)
-	math.randomseed(GetGameTimer())
-
-	if length > 0 then
-		return NGX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)]
-	else
-		return ''
-	end
-end
-
 NGX.GetConfig = function()
 	return Config;
 end
@@ -93,8 +77,4 @@ NGX.DumpTable = function(table, nb)
 	else
 		return tostring(table)
 	end
-end
-
-NGX.Round = function(value, numDecimalPlaces)
-	return NGX.Math.Round(value, numDecimalPlaces)
 end

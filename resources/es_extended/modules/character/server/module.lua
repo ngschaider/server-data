@@ -1,4 +1,4 @@
-ConstructCharacter = function(clientId, characterId)
+module.new = function(clientId, characterId)
 	local self = {};
 
 	self.id = characterId;

@@ -1,11 +1,38 @@
-local CreatePlayer = function()
-	local playerId = MySQL.insert.await("INSERT INTO players (identifier) VALUES (?)", {identifier});
+local utils = M("utils");
+local callbacks = M("callbacks");
+
+NGX.Players = {};
+
+callbacks.RegisterServerCallback("ngx:GetCharacterData", function(clientId, cb, key, ...)
+	local player = NGX.GetPlayerFromId(clientId);
+
+	if not player.character then 
+		cb(nil);
+		return;
+	end
+
+	local whitelist = {"job", "name", "account", "accounts"};
+
+	if not utils.table.Contains(whitelist, key) then
+		return;
+	end
+
+	-- concatenate "get" and `key` with the first letter uppercased
+	local functionName = "get" .. key:gsub("^%l", string.upper);
+
+	cb(player.character[functionName](...));
+end);
+
+module.create = function()
+    local playerId = MySQL.insert.await("INSERT INTO players (identifier) VALUES (?)", {identifier});
 
 	return playerId;
 end
 
-ConstructPlayer = function(clientId)
-	local identifier = NGX.GetIdentifier(playerId);
+
+
+local constructPlayer = function(clientId)
+	local identifier = utils.GetIdentifier(playerId);
 
 	local results = MySQL.prepare.await("SELECT id, identifier FROM players WHERE identifier=?", {identifier});
 	if #results > 0 then

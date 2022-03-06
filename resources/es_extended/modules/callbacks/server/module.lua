@@ -1,8 +1,6 @@
-NGX = NGX or {};
-
 local serverCallbacks = {};
 
-NGX.RegisterServerCallback = function(name, cb)
+module.RegisterServerCallback = function(name, cb)
 	serverCallbacks[name] = cb;
 end
 
@@ -36,7 +34,7 @@ local GetAndConsumeRequestId = function()
     return lastRequestId;
 end
 
-NGX.TriggerClientCallback = function(name, clientId, cb, ...)
+module.TriggerClientCallback = function(name, clientId, cb, ...)
     local requestId = GetAndConsumeRequestId();
 	clientCallbacks[requestId] = cb;
 

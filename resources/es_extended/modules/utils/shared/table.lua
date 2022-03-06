@@ -1,8 +1,7 @@
-NGX = NGX or {};
-NGX.Table = {};
+module.table = {};
 
 -- nil proof alternative to #table
-NGX.Table.SizeOf = function(t)
+module.table.SizeOf = function(t)
 	local count = 0
 
 	for _,_ in pairs(t) do
@@ -12,13 +11,13 @@ NGX.Table.SizeOf = function(t)
 	return count
 end
 
-NGX.Table.Set = function(t)
+module.table.Set = function(t)
 	local set = {}
 	for k,v in ipairs(t) do set[v] = true end
 	return set
 end
 
-NGX.Table.IndexOf = function(t, value)
+module.table.IndexOf = function(t, value)
 	for i=1, #t, 1 do
 		if t[i] == value then
 			return i
@@ -28,11 +27,11 @@ NGX.Table.IndexOf = function(t, value)
 	return -1
 end
 
-NGX.Table.Contains = function(t, value)
+module.table.Contains = function(t, value)
 	return NGX.Table.IndexOf(t, value) ~= -1;
 end
 
-NGX.Table.ContainsKey = function(t, value)
+module.table.ContainsKey = function(t, value)
 	for k,v in pairs(t) do
 		if k == value then
 			return true;
@@ -42,7 +41,7 @@ NGX.Table.ContainsKey = function(t, value)
 	return false;
 end
 
-NGX.Table.LastIndexOf = function(t, value)
+module.table.LastIndexOf = function(t, value)
 	for i=#t, 1, -1 do
 		if t[i] == value then
 			return i
@@ -52,7 +51,7 @@ NGX.Table.LastIndexOf = function(t, value)
 	return -1
 end
 
-NGX.Table.Find = function(t, cb)
+module.table.Find = function(t, cb)
 	for i=1, #t, 1 do
 		if cb(t[i]) then
 			return t[i]
@@ -62,7 +61,7 @@ NGX.Table.Find = function(t, cb)
 	return nil
 end
 
-NGX.Table.FindIndex = function(t, cb)
+module.table.FindIndex = function(t, cb)
 	for i=1, #t, 1 do
 		if cb(t[i]) then
 			return i
@@ -72,7 +71,7 @@ NGX.Table.FindIndex = function(t, cb)
 	return -1
 end
 
-NGX.Table.Filter = function(t, cb)
+module.table.Filter = function(t, cb)
 	local newTable = {}
 
 	for i=1, #t, 1 do
@@ -84,7 +83,7 @@ NGX.Table.Filter = function(t, cb)
 	return newTable
 end
 
-NGX.Table.Map = function(t, cb)
+module.table.Map = function(t, cb)
 	local newTable = {}
 
 	for i=1, #t, 1 do
@@ -94,7 +93,7 @@ NGX.Table.Map = function(t, cb)
 	return newTable
 end
 
-NGX.Table.Reverse = function(t)
+module.table.Reverse = function(t)
 	local newTable = {}
 
 	for i=#t, 1, -1 do
@@ -104,7 +103,7 @@ NGX.Table.Reverse = function(t)
 	return newTable
 end
 
-NGX.Table.Clone = function(t)
+module.table.Clone = function(t)
 	if type(t) ~= 'table' then return t end
 
 	local meta = getmetatable(t)
@@ -123,7 +122,7 @@ NGX.Table.Clone = function(t)
 	return target
 end
 
-NGX.Table.Concat = function(t1, t2)
+module.table.Concat = function(t1, t2)
 	local t3 = NGX.Table.Clone(t1)
 
 	for i=1, #t2, 1 do
@@ -133,7 +132,7 @@ NGX.Table.Concat = function(t1, t2)
 	return t3
 end
 
-NGX.Table.Join = function(t, sep)
+module.table.Join = function(t, sep)
 	local sep = sep or ','
 	local str = ''
 
@@ -150,7 +149,7 @@ end
 
 -- Credit: https://stackoverflow.com/a/15706820
 -- Description: sort function for pairs
-NGX.Table.Sort = function(t, order)
+module.table.Sort = function(t, order)
 	-- collect the keys
 	local keys = {}
 

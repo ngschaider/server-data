@@ -147,16 +147,6 @@ NGX.GetPlayerFromIdentifier = function(identifier)
 	end
 end
 
-NGX.GetIdentifier = function(src)
-	for k,v in pairs(GetPlayerIdentifiers(src)) do
-		if string.match(v, 'license:') then
-			return string.gsub(v, 'license:', '');
-		end
-	end
-
-	return nil;
-end
-
 NGX.GetJobs = function()
 	local result = MySQL.prepare.await("SELECT j.id job_id, j.name job_name, j.label job_label, g.id grade_id, g.name grade_name, g.label grade_label, g.salary salary, FROM jobs j INNER JOIN job_grades g ON g.job_name = j.name");
 	local res = {};

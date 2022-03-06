@@ -3,18 +3,6 @@ NGX.Players = {}
 NGX.Jobs = {}
 Core = {}
 Core.RegisteredCommands = {}
-Core.Pickups = {}
-Core.PickupId = 0
-
-AddEventHandler('ngx:getSharedObject', function(cb)
-	cb(NGX);
-end);
-
-exports('getSharedObject', function()
-	return NGX;
-end);
-
-
 
 MySQL.ready(function()
 	print('[^2INFO^7] ^5NGX^0 initialized')

@@ -37,7 +37,7 @@ local CreateModuleEnv = function(moduleName)
     env.print = function(...)
         local args = {...};
 
-        local str = "^7/^5" .. moduleName .. "^7]";
+        local str = "^7[^5" .. moduleName .. "^7]";
 
         for k,v in pairs(args) do
             str = str .. " " .. tostring(v);
@@ -48,7 +48,7 @@ local CreateModuleEnv = function(moduleName)
     
     env.module = {};
 
-    --setmetatable(env, {__index = _G, __newindex = _G});
+    setmetatable(env, {__index = _G});
 
     return env;
 end;
@@ -70,13 +70,13 @@ local LoadModule = function(moduleName)
     end
 
     if success then
-        NGX.Modules.LoadedModules[moduleName] = moduleEnv;
-        return moduleEnv;
+        NGX.Modules.LoadedModules[moduleName] = moduleEnv.module;
+        return moduleEnv.module;
     else
         NGX.Logger.Error('module [' .. moduleName .. '] does not exist', '@' .. resourceName .. ':boot/sh_modules.lua');
     end
 
-    return 
+    return nil;
 end;
 
 M = LoadModule;

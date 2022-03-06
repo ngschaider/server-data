@@ -2,7 +2,6 @@ SetMapName('San Andreas')
 SetGameType('NGX')
 
 NGX = {};
-NGX.Players = {};
 
 RegisterNetEvent('ngx:OnPlayerJoined', function()
 	local clientId = source;
@@ -48,22 +47,3 @@ NGX.RegisterServerCallback("ngx:GetPlayerData", function(clientId, cb, key, ...)
 	cb(player[functionName](...));
 end);
 
-NGX.RegisterServerCallback("ngx:GetCharacterData", function(clientId, cb, key, ...)
-	local player = NGX.GetPlayerFromId(clientId);
-
-	if not player.character then 
-		cb(nil);
-		return;
-	end
-
-	local whitelist = {"job", "name", "account", "accounts"};
-
-	if not NGX.Table.Contains(whitelist, key) then
-		return;
-	end
-
-	-- concatenate "get" and `key` with the first letter uppercased
-	local functionName = "get" .. key:gsub("^%l", string.upper);
-
-	cb(player.character[functionName](...));
-end);
