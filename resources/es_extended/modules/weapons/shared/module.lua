@@ -1,8 +1,6 @@
-NGX.GetConfig = function()
-	return Config;
-end
+run("config.lua");
 
-NGX.GetWeapon = function(weaponName)
+module.GetWeapon = function(weaponName)
 	weaponName = string.upper(weaponName)
 
 	for k,v in ipairs(Config.Weapons) do
@@ -12,7 +10,7 @@ NGX.GetWeapon = function(weaponName)
 	end
 end
 
-NGX.GetWeaponFromHash = function(weaponHash)
+module.GetWeaponFromHash = function(weaponHash)
 	for k,v in ipairs(Config.Weapons) do
 		if GetHashKey(v.name) == weaponHash then
 			return v
@@ -20,11 +18,11 @@ NGX.GetWeaponFromHash = function(weaponHash)
 	end
 end
 
-NGX.GetWeaponList = function()
+module.GetWeaponList = function()
 	return Config.Weapons
 end
 
-NGX.GetWeaponLabel = function(weaponName)
+module.GetWeaponLabel = function(weaponName)
 	weaponName = string.upper(weaponName)
 
 	for k,v in ipairs(Config.Weapons) do
@@ -34,7 +32,7 @@ NGX.GetWeaponLabel = function(weaponName)
 	end
 end
 
-NGX.GetWeaponComponent = function(weaponName, weaponComponent)
+module.GetWeaponComponent = function(weaponName, weaponComponent)
 	weaponName = string.upper(weaponName)
 	local weapons = Config.Weapons
 

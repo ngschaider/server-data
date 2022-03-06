@@ -1,8 +1,10 @@
+local character = M("character");
+
 local Payout = function()
-	local characters = NGX.GetCharacters();
-	for _, character in pairs(characters) do
-		local job = character.getJob().name;
-		local salary = character.getJob().salary;
+	local characters = character.GetCharacters();
+	for _, c in pairs(characters) do
+		local job = c.GetJob().name;
+		local salary = c.GetJob().salary;
 
 		if salary > 0 then
 			local accounts = NGX.Accounts.getAccount("society", job, "money");

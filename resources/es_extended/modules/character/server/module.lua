@@ -1,5 +1,5 @@
 local utils = M("utils");
-local user = M("user");
+local userClass = M("user");
 
 local CreatePlayer = function(userId, firstname, lastname, dateofbirth, height)
 	local characterId = MySQL.insert.await("INSERT INTO characters (user_id, firstname, lastname, dateofbirth, height) VALUES (?, ?, ?, ?, ?)", {
@@ -15,7 +15,7 @@ local ConstructCharacter = function(characterId)
 	local self = {};
 
 	self.id = results[1].id;
-	self.user = user.GetByPlayerId(results[1].user_id);
+	self.user = userClass.GetByPlayerId(results[1].user_id);
 
 	self.SetPosition = function(coords)
 		self.user.TriggerEvent('ngx:teleport', coords);
@@ -53,3 +53,8 @@ callbacks.RegisterServerCallback("ngx:GetCharacterData", function(clientId, cb, 
 
 	cb(player.character[functionName](...));
 end);
+
+module.GetByPlayerId = function(playerId)
+	local user = userClass.GetByPlayerId(playerId);
+	return user.GetCharacter();
+end;

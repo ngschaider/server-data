@@ -1,25 +1,6 @@
 local game = M("game");
 
-Citizen.CreateThread(function()
-	while true do
-		InvalidateIdleCam()
-		InvalidateVehicleIdleCam()
-		Wait(1000) --The idle camera activates after 30 second so we don't need to call this per frame
-	end
-end)
-
 local cam = nil;
-
-Citizen.CreateThread(function()
-    while true do
-		if NetworkIsSessionStarted() then
-			TriggerServerEvent("ngx:OnPlayerJoined");
-			TriggerEvent("ngx:OnPlayerJoined");
-			return; -- break the loop
-		end
-		Citizen.Wait(100)
-    end
-end)
 
 RegisterNetEvent('ngx:playerLoaded', function(xPlayer, isNew, skin)
 	FreezeEntityPosition(PlayerPedId(), true)
@@ -285,13 +266,14 @@ RegisterNetEvent("ngx:killPlayer", function()
 end)
 
 RegisterNetEvent("ngx:freezePlayer", function(input)
-    local player = PlayerId()
+    local player = PlayerId();
 	local playerPed = PlayerPedId();
-    if input == 'freeze' then
+
+    if input == "freeze" then
         SetEntityCollision(playerPed, false)
         FreezeEntityPosition(playerPed, true)
         SetPlayerInvincible(player, true)
-    elseif input == 'unfreeze' then
+    elseif input == "unfreeze" then
         SetEntityCollision(playerPed, true)
 	    FreezeEntityPosition(playerPed, false)
         SetPlayerInvincible(player, false)

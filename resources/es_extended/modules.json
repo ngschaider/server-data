@@ -1,3 +1,16 @@
 [
-    "death"
+    "callbacks",
+    "character",
+    "commands",
+    "death",
+    "deferral",
+    "game",
+    "notification",
+    "paycheck",
+    "scaleform",
+    "streaming",
+    "tasks",
+    "user",
+    "utils",
+    "weapons"
 ]

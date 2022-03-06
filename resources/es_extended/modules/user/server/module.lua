@@ -14,9 +14,9 @@ local ConstructUser = function(userId)
 
 	local results = MySQL.prepare.await("SELECT identifier FROM players WHERE id=?", {userId});
 
-	self.identifier = results[1].identifier;
-	self.id = userId;
-	self.character = nil;
+	local identifier = results[1].identifier;
+	local id = userId;
+	local character = nil;
 
 	self.TriggerEvent = function(eventName, ...)
 		TriggerClientEvent(eventName, self.playerId, ...);
@@ -26,7 +26,7 @@ local ConstructUser = function(userId)
 		self.character = character;
 	end;
 	
-	self.GetCurrentCharacter = function()
+	self.GetCharacter = function()
 		return self.character;
 	end;
 
@@ -64,14 +64,36 @@ end;
 module.GetByIdentifier = function(identifier)
 	local results = MySQL.prepare.await("SELECT id FROM users WHERE identifier=?", {identifier});
 
-	if utils.table.Size(results) > 0 then
-		return module.GetByUserId(results[1].id);
-	else
-		return CreatePlayer(identifier);
+	for k,v in pairs(users) do
+		if v.GetIdentifier() == identifier then
+			return v;
+		end
 	end
+
+	return CreatePlayer(identifier);
 end;
 
 module.GetByPlayerId = function(playerId)
-	local identifier = utils.GetIdentifier(playerId);
-	return module.GetByIdentifier(identifier);
+	for k,v in pairs(users) do
+		if v.playerId == playerId then
+			return v;
+		end
+	end
+	
+	return CreatePlayer(identifier);
 end;
+
+callbacks.RegisterServerCallback("ngx:user:GetData", function(clientId, cb, key, ...)
+	local user = module.GetByPlayerId(clientId);
+	
+	local whitelist = {"characters"};
+
+	if not utils.table.Contains(whitelist, key) then
+		return;
+	end
+
+	-- concatenate "Get" and `key` with the first letter uppercased
+	local functionName = "Get" .. key:gsub("^%l", string.upper);
+
+	cb(user[functionName](...));
+end);
