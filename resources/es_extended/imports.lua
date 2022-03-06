@@ -1,1 +1,0 @@
-NGX = exports['es_extended']:getSharedObject()

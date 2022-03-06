@@ -1,7 +1,4 @@
-NGX = NGX or {};
-NGX.Game = NGX.Game or {};
-
-NGX.Game.GetPedMugshot = function(ped, transparent)
+module.GetPedMugshot = function(ped, transparent)
 	if DoesEntityExist(ped) then
 		local mugshot
 
@@ -21,7 +18,7 @@ NGX.Game.GetPedMugshot = function(ped, transparent)
 	end
 end
 
-NGX.Game.Teleport = function(entity, coords, cb)
+module.Teleport = function(entity, coords, cb)
 	local vector = type(coords) == "vector4" and coords or type(coords) == "vector3" and vector4(coords, 0.0) or vec(coords.x, coords.y, coords.z, coords.heading or 0.0)
 
 	if DoesEntityExist(entity) then
@@ -39,7 +36,7 @@ NGX.Game.Teleport = function(entity, coords, cb)
 	end
 end
 
-NGX.Game.SpawnObject = function(object, coords, cb, networked)
+module.SpawnObject = function(object, coords, cb, networked)
 	local model = type(object) == 'number' and object or GetHashKey(object)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
@@ -54,21 +51,21 @@ NGX.Game.SpawnObject = function(object, coords, cb, networked)
 	end)
 end
 
-NGX.Game.SpawnLocalObject = function(object, coords, cb)
+module.SpawnLocalObject = function(object, coords, cb)
 	NGX.Game.SpawnObject(object, coords, cb, false)
 end
 
-NGX.Game.DeleteVehicle = function(vehicle)
+module.DeleteVehicle = function(vehicle)
 	SetEntityAsMissionEntity(vehicle, false, true)
 	DeleteVehicle(vehicle)
 end
 
-NGX.Game.DeleteObject = function(object)
+module.DeleteObject = function(object)
 	SetEntityAsMissionEntity(object, false, true)
 	DeleteObject(object)
 end
 
-NGX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
+module.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
@@ -98,22 +95,22 @@ NGX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
 	end)
 end
 
-NGX.Game.SpawnLocalVehicle = function(vehicle, coords, heading, cb)
-	NGX.Game.SpawnVehicle(vehicle, coords, heading, cb, false)
+module.SpawnLocalVehicle = function(vehicle, coords, heading, cb)
+	module.SpawnVehicle(vehicle, coords, heading, cb, false)
 end
 
-NGX.Game.IsVehicleEmpty = function(vehicle)
+module.IsVehicleEmpty = function(vehicle)
 	local passengers = GetVehicleNumberOfPassengers(vehicle)
 	local driverSeatFree = IsVehicleSeatFree(vehicle, -1)
 
 	return passengers == 0 and driverSeatFree
 end
 
-NGX.Game.GetObjects = function() -- Leave the function for compatibility
+module.GetObjects = function() -- Leave the function for compatibility
 	return GetGamePool('CObject')
 end
 
-NGX.Game.GetPeds = function(onlyOtherPeds)
+module.GetPeds = function(onlyOtherPeds)
 	local peds = {};
 	local myPed = NGX.Character.getPed(),
 	local pool = GetGamePool("CPed");
@@ -127,11 +124,11 @@ NGX.Game.GetPeds = function(onlyOtherPeds)
 	return peds
 end
 
-NGX.Game.GetVehicles = function() -- Leave the function for compatibility
+module.GetVehicles = function() -- Leave the function for compatibility
 	return GetGamePool('CVehicle')
 end
 
-NGX.Game.GetPlayers = function(onlyOtherPlayers, returnKeyValue, returnPeds)
+module.GetPlayers = function(onlyOtherPlayers, returnKeyValue, returnPeds)
 	local players, myPlayer = {}, PlayerId()
 
 	for k,player in ipairs(GetActivePlayers()) do
@@ -149,20 +146,20 @@ NGX.Game.GetPlayers = function(onlyOtherPlayers, returnKeyValue, returnPeds)
 	return players
 end
 
-NGX.Game.GetClosestObject = function(coords, modelFilter)
-	return NGX.Game.GetClosestEntity(NGX.Game.GetObjects(), false, coords, modelFilter)
+module.GetClosestObject = function(coords, modelFilter)
+	return module.GetClosestEntity(module.GetObjects(), false, coords, modelFilter)
 end
 
-NGX.Game.GetClosestPed = function(coords, modelFilter)
-	return NGX.Game.GetClosestEntity(NGX.Game.GetPeds(true), false, coords, modelFilter)
+module.GetClosestPed = function(coords, modelFilter)
+	return module.GetClosestEntity(module.GetPeds(true), false, coords, modelFilter)
 end
 
-NGX.Game.GetClosestPlayer = function(coords)
-	return NGX.Game.GetClosestEntity(NGX.Game.GetPlayers(true, true), true, coords, nil)
+module.GetClosestPlayer = function(coords)
+	return module.GetClosestEntity(module.GetPlayers(true, true), true, coords, nil)
 end
 
-NGX.Game.GetClosestVehicle = function(coords, modelFilter)
-	return NGX.Game.GetClosestEntity(NGX.Game.GetVehicles(), false, coords, modelFilter)
+module.GetClosestVehicle = function(coords, modelFilter)
+	return module.GetClosestEntity(module.GetVehicles(), false, coords, modelFilter)
 end
 
 local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coords, maxDistance)
@@ -186,19 +183,19 @@ local function EnumerateEntitiesWithinDistance(entities, isPlayerEntities, coord
 	return nearbyEntities
 end
 
-NGX.Game.GetPlayersInArea = function(coords, maxDistance)
-	return EnumerateEntitiesWithinDistance(NGX.Game.GetPlayers(true, true), true, coords, maxDistance)
+module.GetPlayersInArea = function(coords, maxDistance)
+	return EnumerateEntitiesWithinDistance(module.GetPlayers(true, true), true, coords, maxDistance)
 end
 
-NGX.Game.GetVehiclesInArea = function(coords, maxDistance)
-	return EnumerateEntitiesWithinDistance(NGX.Game.GetVehicles(), false, coords, maxDistance)
+module.GetVehiclesInArea = function(coords, maxDistance)
+	return EnumerateEntitiesWithinDistance(module.GetVehicles(), false, coords, maxDistance)
 end
 
-NGX.Game.IsSpawnPointClear = function(coords, maxDistance)
-	return #NGX.Game.GetVehiclesInArea(coords, maxDistance) == 0
+module.IsSpawnPointClear = function(coords, maxDistance)
+	return #module.GetVehiclesInArea(coords, maxDistance) == 0
 end
 
-NGX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFilter)
+module.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFilter)
 	local closestEntity, closestEntityDistance, filteredEntities = -1, -1, nil
 
 	if coords then
@@ -229,7 +226,7 @@ NGX.Game.GetClosestEntity = function(entities, isPlayerEntities, coords, modelFi
 	return closestEntity, closestEntityDistance
 end
 
-NGX.Game.GetVehicleInDirection = function()
+module.GetVehicleInDirection = function()
 	local playerPed    = NGX.Character.getPed();
 	local playerCoords = GetEntityCoords(playerPed)
 	local inDirection  = GetOffsetFromEntityInWorldCoords(playerPed, 0.0, 5.0, 0.0)
@@ -244,7 +241,7 @@ NGX.Game.GetVehicleInDirection = function()
 	return nil
 end
 
-NGX.Game.GetVehicleProperties = function(vehicle)
+module.GetVehicleProperties = function(vehicle)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
@@ -345,7 +342,7 @@ NGX.Game.GetVehicleProperties = function(vehicle)
 	end
 end
 
-NGX.Game.SetVehicleProperties = function(vehicle, props)
+module.SetVehicleProperties = function(vehicle, props)
 	if DoesEntityExist(vehicle) then
 		local colorPrimary, colorSecondary = GetVehicleColours(vehicle)
 		local pearlescentColor, wheelColor = GetVehicleExtraColours(vehicle)
@@ -437,7 +434,7 @@ NGX.Game.SetVehicleProperties = function(vehicle, props)
 	end
 end
 
-NGX.Game.DrawText3D = function(coords, text, size, font)
+module.DrawText3D = function(coords, text, size, font)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 
 	local camCoords = GetFinalRenderedCamCoord()
