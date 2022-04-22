@@ -1,8 +1,6 @@
 endpoint_add_tcp "0.0.0.0:30120"
 endpoint_add_udp "0.0.0.0:30120"
 
-set mysql_connection_string "user=fivem;database=fivem;host=localhost"
-
 sets locale "de-DE" 
 
 sv_hostname "ngTest"
@@ -14,6 +12,13 @@ sv_maxclients 48
 sv_licenseKey "cfxk_1lkLcehbRBnNDE69K758H_30nRTW"
 
 # cfx-server-data
-ensure [cfx-server-data]
+ensure mapmanager
+ensure chat
+ensure spawnmanager
+ensure sessionmanager
+ensure basic-gamemode
+ensure hardcap
+ensure rconlog
 
-ensure ngx
+#ensure kleidung
+ensure vMenu
